@@ -991,12 +991,17 @@ function renderQR(c) {
   <div class="qr-info">⚠ Setelah deploy ke Vercel, ganti <b>baseUrl</b> di kode dengan URL asli domain kamu.</div>`;
   ROOMS.forEach(room=>{
     const url=`${baseUrl}?room=${room.id}`;
+    const qrSrc=`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`;
     html+=`<div class="qr-card">
-      <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=160x160&bgcolor=ffffff&margin=8" width="76" height="76">
-      <div>
+      <img class="qr-img" src="${qrSrc}" width="76" height="76" id="qr-${room.id}">
+      <div style="flex:1">
         <div class="qr-room-name">${room.emoji} ${room.name}</div>
         <div class="qr-room-meta">${room.kode} · ${room.lokasi}</div>
         <div class="qr-url">${url}</div>
+        <a href="${qrSrc}" download="QR-${room.id}.png"
+          style="display:inline-block;margin-top:7px;padding:5px 12px;background:#f0fdf4;border:1.5px solid #10b981;border-radius:8px;font-size:11px;font-weight:700;color:#059669;text-decoration:none">
+          ⬇ Unduh QR
+        </a>
       </div>
     </div>`;
   });
@@ -1014,7 +1019,17 @@ function renderQR(c) {
 }
 
 // ==================== INIT ====================
-loadDashboard();
+// Cek apakah dibuka dari QR code (ada parameter ?room=...)
+(async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const roomParam = params.get('room');
+  if (roomParam && ROOMS.find(r => r.id === roomParam)) {
+    // Langsung buka form ruangan yang dituju
+    await openRoom(roomParam);
+  } else {
+    loadDashboard();
+  }
+})();
 </script>
 </body>
 </html>
