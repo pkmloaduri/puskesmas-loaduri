@@ -6,36 +6,36 @@
 <meta name="theme-color" content="#0f766e">
 <title>Jadwal Pemeliharaan – Puskesmas Loa Duri</title>
 
-<!-- ✅ Firebase SDK via CDN (tidak perlu npm/Node.js) -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<!-- Export libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ===== RESET & BASE ===== */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh}
 .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 
-/* ===== TOPBAR ===== */
+/* TOPBAR */
 .topbar{background:#fff;padding:14px 18px;box-shadow:0 1px 0 #e2e8f0;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px}
 .topbar-back{background:#f1f5f9;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:16px;line-height:1}
 .topbar-title{font-weight:800;font-size:15px;color:#0f766e}
 .topbar-sub{font-size:11px;color:#94a3b8;margin-top:1px}
 
-/* ===== LAYOUT ===== */
+/* LAYOUT */
 .content{flex:1;padding:16px;padding-bottom:90px;overflow-y:auto}
 .bottomnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #e2e8f0;display:flex;z-index:50}
 .navbtn{flex:1;padding:9px 0;border:none;background:transparent;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:3px;border-top:2px solid transparent;transition:color .15s,border-color .15s}
 .navbtn.active{color:#0f766e;border-color:#0f766e;font-weight:600}
 .navbtn .navicon{font-size:19px;line-height:1}
 
-/* ===== HERO ===== */
+/* HERO */
 .hero{background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%);border-radius:16px;padding:20px;color:#fff;margin-bottom:20px}
 .hero-date{font-size:12px;opacity:.8;margin-bottom:3px}
 .hero-greeting{font-size:26px;font-weight:800;line-height:1.1}
@@ -45,10 +45,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .hero-stat-num{font-size:26px;font-weight:800;line-height:1}
 .hero-stat-lbl{font-size:10px;opacity:.85;margin-top:2px}
 
-/* ===== SECTION LABEL ===== */
+/* SECTION LABEL */
 .sec-label{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
 
-/* ===== ROOM CARDS ===== */
+/* ROOM CARDS */
 .room-card{background:#fff;border-radius:14px;padding:15px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:13px;cursor:pointer;margin-bottom:10px;border:2px solid transparent;transition:border-color .2s}
 .room-card.done{border-color:#10b981}
 .room-emoji{font-size:30px;flex-shrink:0;line-height:1}
@@ -62,11 +62,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .room-pct{background:#f1f5f9;color:#94a3b8;border-radius:20px;padding:3px 9px;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0}
 .room-pct.done{background:#d1fae5;color:#059669}
 
-/* ===== SKELETON ===== */
+/* SKELETON */
 .skel{background:#e2e8f0;border-radius:6px;animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
 
-/* ===== FORM ===== */
+/* FORM */
 .form-legend{background:#f8fafc;border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:12px;color:#475569;border-left:3px solid #0d9488}
 .item-card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:10px}
 .item-num{font-size:10px;color:#94a3b8;font-weight:700;margin-right:5px}
@@ -79,16 +79,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .act-btn.active-rusak{border-color:#ef4444;background:#fee2e2;color:#dc2626}
 .act-btn.active-perbaikan{border-color:#f59e0b;background:#fef3c7;color:#d97706}
 
-/* ===== FIELD ===== */
+/* FIELD */
 .field-label{font-weight:700;font-size:13px;display:block;margin-bottom:7px}
 .field-input{width:100%;padding:10px 12px;border-radius:9px;border:1.5px solid #e2e8f0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color .15s}
 .field-input:focus{border-color:#0d9488}
 
-/* ===== SUBMIT ===== */
+/* SUBMIT */
 .submit-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;font-weight:800;font-size:15px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:14px;box-shadow:0 4px 14px rgba(15,118,110,.3);letter-spacing:.02em}
 .submit-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
 
-/* ===== REKAP ===== */
+/* REKAP */
 .month-sel,.room-sel{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #e2e8f0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:#fff;outline:none}
 .month-sel{margin-bottom:10px}
 .room-sel{margin-bottom:14px}
@@ -111,7 +111,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .leg-item{display:flex;align-items:center;gap:4px;font-size:10px}
 .leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 
-/* ===== DETAIL TABLE ===== */
+/* DETAIL TABLE */
 .tbl-wrap{overflow-x:auto;margin-top:6px}
 .detail-tbl{border-collapse:collapse;width:100%;font-size:11px}
 .detail-tbl th{padding:5px 7px;background:#f8fafc;text-align:center;font-weight:600;white-space:nowrap;min-width:22px}
@@ -120,7 +120,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .detail-tbl td.item-td{text-align:left;padding-left:7px;position:sticky;left:0;background:#fff;white-space:nowrap;font-size:10px}
 .detail-tbl tr:last-child td{border-bottom:none}
 
-/* ===== QR ===== */
+/* QR */
 .qr-info{background:#fef3c7;border-radius:10px;padding:12px 14px;font-size:12px;color:#92400e;margin-bottom:14px;border-left:3px solid #f59e0b}
 .qr-card{background:#fff;border-radius:14px;padding:15px;box-shadow:0 1px 6px rgba(0,0,0,.07);display:flex;gap:14px;align-items:center;margin-bottom:10px}
 .qr-img{width:76px;height:76px;border-radius:8px;flex-shrink:0;background:#f1f5f9}
@@ -133,106 +133,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .qr-dl-btn{display:inline-block;margin-top:7px;padding:5px 12px;background:#f0fdf4;border:1.5px solid #10b981;border-radius:8px;font-size:11px;font-weight:700;color:#059669;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
 .qr-dl-btn:disabled{opacity:.5;cursor:not-allowed}
 
-/* ===== NOTIF BANNER ===== */
+/* NOTIF BANNER */
 .notif-banner{background:#fff;border-radius:14px;padding:15px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px;display:flex;align-items:center;gap:12px}
 .notif-banner-icon{font-size:28px;flex-shrink:0}
 .notif-banner-text{flex:1}
 .notif-banner-title{font-weight:700;font-size:13px;color:#0f172a}
 .notif-banner-sub{font-size:11px;color:#64748b;margin-top:2px}
 .notif-btn{padding:8px 14px;border-radius:9px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.notif-btn-on{background:#d1fae5;color:#059669}
 .notif-btn-off{background:#fee2e2;color:#dc2626}
 .notif-btn-ask{background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff}
 
-// ==================== NOTIFIKASI ====================
-const NOTIF_HOUR = 8;
-const NOTIF_MINUTE = 0;
-
-async function initNotif() {
-  if(!('serviceWorker' in navigator) || !('Notification' in window)) return;
-  try {
-    const reg = await navigator.serviceWorker.register('/sw.js');
-    // Kirim jadwal ke service worker
-    if(reg.active) {
-      reg.active.postMessage({
-        type: 'SCHEDULE_NOTIF',
-        hour: NOTIF_HOUR,
-        minute: NOTIF_MINUTE
-      });
-    }
-    // Tunggu sampai SW aktif kalau belum
-    navigator.serviceWorker.ready.then(r => {
-      r.active?.postMessage({
-        type: 'SCHEDULE_NOTIF',
-        hour: NOTIF_HOUR,
-        minute: NOTIF_MINUTE
-      });
-    });
-  } catch(e) {
-    console.warn('SW register gagal:', e);
-  }
-}
-
-function getNotifStatus() {
-  if(!('Notification' in window)) return 'unsupported';
-  return Notification.permission; // 'default' | 'granted' | 'denied'
-}
-
-async function requestNotif() {
-  const perm = await Notification.requestPermission();
-  if(perm === 'granted') {
-    await initNotif();
-    showToast('✓ Notifikasi pengingat aktif!');
-  } else {
-    showToast('⚠ Izin notifikasi ditolak.','error');
-  }
-  // Re-render banner di dashboard
-  S.dashLoaded = false;
-  loadDashboard();
-}
-
-function buildNotifBanner() {
-  const status = getNotifStatus();
-  if(status === 'unsupported') return '';
-
-  if(status === 'granted') {
-    return `<div class="notif-banner">
-      <div class="notif-banner-icon">🔔</div>
-      <div class="notif-banner-text">
-        <div class="notif-banner-title">Notifikasi Aktif</div>
-        <div class="notif-banner-sub">Pengingat harian jam 08.00 sudah aktif di perangkat ini</div>
-      </div>
-      <button class="notif-btn notif-btn-off" onclick="disableNotif()">Matikan</button>
-    </div>`;
-  }
-
-  if(status === 'denied') {
-    return `<div class="notif-banner">
-      <div class="notif-banner-icon">🔕</div>
-      <div class="notif-banner-text">
-        <div class="notif-banner-title">Notifikasi Diblokir</div>
-        <div class="notif-banner-sub">Aktifkan manual di pengaturan browser → izin notifikasi</div>
-      </div>
-    </div>`;
-  }
-
-  // default — belum diminta
-  return `<div class="notif-banner">
-    <div class="notif-banner-icon">🔔</div>
-    <div class="notif-banner-text">
-      <div class="notif-banner-title">Aktifkan Pengingat Harian</div>
-      <div class="notif-banner-sub">Notifikasi jam 08.00 setiap Senin–Sabtu (UGD setiap hari)</div>
-    </div>
-    <button class="notif-btn notif-btn-ask" onclick="requestNotif()">Aktifkan</button>
-  </div>`;
-}
-
-async function disableNotif() {
-  // Tidak bisa cabut izin via JS — arahkan ke pengaturan browser
-  showToast('Matikan notifikasi di pengaturan browser → izin situs', 'error');
-}
-  
-/* ===== EXPORT ===== */
+/* EXPORT */
 .export-card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px}
 .export-card-title{font-weight:700;font-size:14px;color:#0f172a;margin-bottom:4px}
 .export-card-sub{font-size:12px;color:#64748b;margin-bottom:14px}
@@ -242,27 +153,27 @@ async function disableNotif() {
 .export-btn-pdf{background:linear-gradient(135deg,#991b1b,#dc2626);color:#fff;box-shadow:0 4px 14px rgba(153,27,27,.25)}
 .export-info{background:#f0fdf4;border-radius:10px;padding:11px 14px;font-size:11px;color:#166534;border-left:3px solid #10b981;line-height:1.7}
 .export-month-sel{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #e2e8f0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:#fff;outline:none;margin-bottom:14px}
-  
-/* ===== TOAST ===== */
+
+/* TOAST */
 .toast{position:fixed;top:75px;left:50%;transform:translateX(-50%);padding:9px 18px;border-radius:20px;font-size:13px;font-weight:700;z-index:200;white-space:nowrap;pointer-events:none;transition:opacity .3s}
 .toast.success{background:#059669;color:#fff}
 .toast.error{background:#dc2626;color:#fff}
 .toast.hide{opacity:0}
 
-/* ===== LOADING OVERLAY ===== */
+/* LOADING */
 .loading-overlay{position:fixed;inset:0;background:rgba(240,253,244,.85);display:flex;align-items:center;justify-content:center;z-index:150;backdrop-filter:blur(3px)}
 .spinner{width:38px;height:38px;border:3px solid #e2e8f0;border-top-color:#0d9488;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ===== PAGE TITLE ===== */
+/* PAGE TITLE */
 .page-title{font-weight:800;font-size:17px;margin-bottom:16px}
 
-/* ===== MODE TABS ===== */
+/* MODE TABS */
 .mode-tabs{display:flex;background:#f1f5f9;border-radius:10px;padding:3px;margin-bottom:14px;gap:3px}
 .mode-tab{flex:1;padding:8px 4px;border:none;background:transparent;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;transition:all .2s}
 .mode-tab.active{background:#fff;color:#0f766e;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 
-/* ===== DATE PICKER ===== */
+/* DATE PICKER */
 .date-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .date-row label{font-size:12px;font-weight:700;color:#64748b;white-space:nowrap}
 .date-inp{flex:1;min-width:130px;padding:9px 12px;border-radius:9px;border:1.5px solid #e2e8f0;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#fff}
@@ -271,12 +182,12 @@ async function disableNotif() {
 .badge-back{background:#fef3c7;color:#d97706}
 .badge-pre{background:#e0e7ff;color:#6366f1}
 
-/* ===== RANGE DATE ===== */
+/* RANGE DATE */
 .range-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .range-date-item label{font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:4px}
 .range-summary{background:#f0fdf4;border-radius:10px;padding:11px 14px;font-size:12px;color:#166534;margin-bottom:14px;border-left:3px solid #10b981}
 
-/* ===== DAY CHIPS (exception selector) ===== */
+/* DAY CHIPS */
 .exc-section{background:#f8fafc;border-radius:12px;padding:13px;margin-bottom:10px;border:1.5px solid #e2e8f0}
 .exc-title{font-size:12px;font-weight:700;color:#64748b;margin-bottom:10px}
 .exc-hint{font-size:11px;color:#94a3b8;margin-bottom:10px}
@@ -285,7 +196,7 @@ async function disableNotif() {
 .day-chip.has-override{border-color:#f59e0b;background:#fef3c7;color:#d97706}
 .day-chip.active{border-color:#0d9488;background:#ccfbf1;color:#0f766e}
 
-/* ===== OVERRIDE PANEL ===== */
+/* OVERRIDE PANEL */
 .override-panel{background:#fff;border-radius:12px;border:2px solid #0d9488;padding:13px;margin-top:10px}
 .override-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .override-panel-title{font-size:12px;font-weight:800;color:#0f766e}
@@ -333,8 +244,7 @@ async function disableNotif() {
 
 <script>
 // ============================================================
-// ⚠️  FIREBASE CONFIG — GANTI SEMUA NILAI DI BAWAH INI
-//     Ambil dari: Firebase Console → Project Settings → Web App
+// FIREBASE CONFIG — sesuaikan dengan project kamu
 // ============================================================
 const firebaseConfig = {
   apiKey:            "AIzaSyCn4PSLIN87-2Zu9APJjjXlV14e4kcm99A",
@@ -351,7 +261,7 @@ const db = firebase.firestore();
 const ROOMS = [
   { id:'ugd', name:'Ruang UGD', kode:'R-09', lokasi:'Lt 1', emoji:'🏥',
     items:[
-      {id:'meja-kursi',   name:'Meja dan Kursi',       standar:'Bersih, rapi'},
+      {id:'meja-kursi',   name:'Meja dan Kursi',        standar:'Bersih, rapi'},
       {id:'lantai',       name:'Lantai',                standar:'Bersih'},
       {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
       {id:'dinding',      name:'Dinding',               standar:'Bersih'},
@@ -362,7 +272,7 @@ const ROOMS = [
       {id:'tempat-tidur', name:'Tempat Tidur',          standar:'Bersih'},
       {id:'ac',           name:'AC',                    standar:'Bersih'},
     ]},
-  { id:'toilet-pria', name:'Toilet Pria', kode:'T-01', lokasi:'Lt 2', emoji:'🚹',
+  { id:'toilet-pria', name:'Toilet Pria Petugas', kode:'T-01', lokasi:'Lt 2', emoji:'🚹',
     items:[
       {id:'lantai',       name:'Lantai',                standar:'Bersih / tidak berlumut'},
       {id:'closed',       name:'Closed',                standar:'Bersih'},
@@ -370,11 +280,11 @@ const ROOMS = [
       {id:'dinding',      name:'Dinding',               standar:'Bersih'},
       {id:'pintu',        name:'Pintu',                 standar:'Berfungsi baik, bersih'},
       {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
-      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Di ganti setiap hari'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
       {id:'bak-air',      name:'Bak Air',               standar:'Bersih, cukup air'},
       {id:'gayung',       name:'Gayung',                standar:'Bersih'},
     ]},
-  { id:'toilet-wanita', name:'Toilet Wanita', kode:'T-02', lokasi:'Lt 2', emoji:'🚺',
+  { id:'toilet-wanita', name:'Toilet Wanita Petugas', kode:'T-02', lokasi:'Lt 2', emoji:'🚺',
     items:[
       {id:'lantai',       name:'Lantai',                standar:'Bersih / tidak berlumut'},
       {id:'closed',       name:'Closed',                standar:'Bersih'},
@@ -382,7 +292,7 @@ const ROOMS = [
       {id:'dinding',      name:'Dinding',               standar:'Bersih'},
       {id:'pintu',        name:'Pintu',                 standar:'Berfungsi baik, bersih'},
       {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
-      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Di ganti setiap hari'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
       {id:'bak-air',      name:'Bak Air',               standar:'Bersih, cukup air'},
       {id:'gayung',       name:'Gayung',                standar:'Bersih'},
     ]},
@@ -419,46 +329,78 @@ const ROOMS = [
       {id:'tv',           name:'TV / Display',          standar:'Bersih, berfungsi'},
       {id:'ac',           name:'AC',                    standar:'Bersih'},
     ]},
+  { id:'toilet-pria-pasien', name:'Toilet Pria Pasien', kode:'T-03', lokasi:'Lt 1', emoji:'🚹',
+    items:[
+      {id:'lantai',       name:'Lantai',                standar:'Bersih / tidak berlumut'},
+      {id:'closed',       name:'Closed',                standar:'Bersih'},
+      {id:'kran',         name:'Kran',                  standar:'Berfungsi'},
+      {id:'dinding',      name:'Dinding',               standar:'Bersih'},
+      {id:'pintu',        name:'Pintu',                 standar:'Berfungsi baik, bersih'},
+      {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
+      {id:'bak-air',      name:'Bak Air',               standar:'Bersih, cukup air'},
+      {id:'gayung',       name:'Gayung',                standar:'Bersih'},
+    ]},
+  { id:'toilet-wanita-pasien', name:'Toilet Wanita Pasien', kode:'T-04', lokasi:'Lt 1', emoji:'🚺',
+    items:[
+      {id:'lantai',       name:'Lantai',                standar:'Bersih / tidak berlumut'},
+      {id:'closed',       name:'Closed',                standar:'Bersih'},
+      {id:'kran',         name:'Kran',                  standar:'Berfungsi'},
+      {id:'dinding',      name:'Dinding',               standar:'Bersih'},
+      {id:'pintu',        name:'Pintu',                 standar:'Berfungsi baik, bersih'},
+      {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
+      {id:'bak-air',      name:'Bak Air',               standar:'Bersih, cukup air'},
+      {id:'gayung',       name:'Gayung',                standar:'Bersih'},
+    ]},
+  { id:'area-bersuci', name:'Area Bersuci', kode:'AB-01', lokasi:'Lt 2', emoji:'🚿',
+    items:[
+      {id:'kran-wudhu',   name:'Kran Wudhu',            standar:'Berfungsi'},
+      {id:'wastafel',     name:'Wastafel',              standar:'Bersih, tidak berlumut'},
+      {id:'saluran-air',  name:'Saluran Pembuangan Air',standar:'Tidak tersumbat'},
+      {id:'lantai',       name:'Lantai',                standar:'Bersih, tidak berlumut'},
+      {id:'sapu-pel',     name:'Sapu & Pel',            standar:'Tersedia dan bersih'},
+    ]},
   { id:'poli-gigi', name:'Poli Gigi', kode:'R-12', lokasi:'Lt 1', emoji:'🦷',
     items:[
       {id:'meja-kursi',   name:'Meja dan Kursi',        standar:'Bersih, rapi'},
-      {id:'dental-unit',  name:'Dental Unit',            standar:'Bersih, rapi'},
-      {id:'lantai',       name:'Lantai',                 standar:'Bersih'},
-      {id:'langit',       name:'Langit-langit / Plafon', standar:'Bersih'},
-      {id:'dinding',      name:'Dinding',                standar:'Bersih'},
-      {id:'wastafel',     name:'Wastafel',               standar:'Bersih, tidak berlumut'},
-      {id:'kaca',         name:'Kaca',                   standar:'Bersih'},
-      {id:'lemari',       name:'Lemari',                 standar:'Bersih'},
-      {id:'komputer',     name:'Komputer',               standar:'Bersih'},
-      {id:'tempat-sampah',name:'Tempat Sampah',          standar:'Diganti setiap hari'},
-      {id:'ac',           name:'AC',                     standar:'Bersih'},
+      {id:'dental-unit',  name:'Dental Unit',           standar:'Bersih, rapi'},
+      {id:'lantai',       name:'Lantai',                standar:'Bersih'},
+      {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'dinding',      name:'Dinding',               standar:'Bersih'},
+      {id:'wastafel',     name:'Wastafel',              standar:'Bersih, tidak berlumut'},
+      {id:'kaca',         name:'Kaca',                  standar:'Bersih'},
+      {id:'lemari',       name:'Lemari',                standar:'Bersih'},
+      {id:'komputer',     name:'Komputer',              standar:'Bersih'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
+      {id:'ac',           name:'AC',                    standar:'Bersih'},
     ]},
   { id:'dapur', name:'Ruang Dapur', kode:'R-07', lokasi:'Lt 2', emoji:'🍽️',
     items:[
-      {id:'meja-kompor',  name:'Meja Kompor',            standar:'Bersih, rapi'},
-      {id:'lantai',       name:'Lantai',                 standar:'Bersih, rapi'},
-      {id:'langit',       name:'Langit-langit / Plafon', standar:'Bersih'},
-      {id:'dinding',      name:'Dinding',                standar:'Bersih'},
-      {id:'lemari-piring',name:'Lemari Piring',          standar:'Bersih'},
-      {id:'lemari-kaca',  name:'Lemari Kaca',            standar:'Bersih'},
-      {id:'tempat-sampah',name:'Tempat Sampah',          standar:'Diganti setiap hari'},
+      {id:'meja-kompor',  name:'Meja Kompor',           standar:'Bersih, rapi'},
+      {id:'lantai',       name:'Lantai',                standar:'Bersih, rapi'},
+      {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'dinding',      name:'Dinding',               standar:'Bersih'},
+      {id:'lemari-piring',name:'Lemari Piring',         standar:'Bersih'},
+      {id:'lemari-kaca',  name:'Lemari Kaca',           standar:'Bersih'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
     ]},
   { id:'mushola', name:'Mushola', kode:'M-01', lokasi:'Lt 2', emoji:'🕌',
     items:[
-      {id:'ambal',        name:'Ambal',                  standar:'Bersih, rapi'},
-      {id:'langit',       name:'Langit-langit / Plafon', standar:'Bersih'},
-      {id:'dinding',      name:'Dinding',                standar:'Bersih'},
-      {id:'tempat-sampah',name:'Tempat Sampah',          standar:'Diganti setiap hari'},
+      {id:'ambal',        name:'Ambal',                 standar:'Bersih, rapi'},
+      {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'dinding',      name:'Dinding',               standar:'Bersih'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
     ]},
   { id:'ruang-pertemuan', name:'Ruang Pertemuan', kode:'R-06', lokasi:'Lt 2', emoji:'🤝',
     items:[
-      {id:'meja-kursi',   name:'Meja dan Kursi',         standar:'Bersih, rapi'},
-      {id:'lantai',       name:'Lantai',                 standar:'Bersih'},
-      {id:'langit',       name:'Langit-langit / Plafon', standar:'Bersih'},
-      {id:'dinding',      name:'Dinding',                standar:'Bersih'},
-      {id:'ac',           name:'AC',                     standar:'Bersih'},
-      {id:'kaca',         name:'Kaca',                   standar:'Bersih'},
-      {id:'tempat-sampah',name:'Tempat Sampah',          standar:'Diganti setiap hari'},
+      {id:'meja-kursi',   name:'Meja dan Kursi',        standar:'Bersih, rapi'},
+      {id:'lantai',       name:'Lantai',                standar:'Bersih'},
+      {id:'langit',       name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'dinding',      name:'Dinding',               standar:'Bersih'},
+      {id:'ac',           name:'AC',                    standar:'Bersih'},
+      {id:'kaca',         name:'Kaca',                  standar:'Bersih'},
+      {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
     ]},
 ];
 
@@ -467,55 +409,32 @@ const pad = n => String(n).padStart(2,'0');
 const getToday = () => { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
 const getYearMonth = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}`;
 const getDaysInMonth = ym => { const [y,m]=ym.split('-').map(Number); return new Date(y,m,0).getDate(); };
-
-function formatDate(ds) {
-  return new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-}
-function formatDateShort(ds) {
-  const d = new Date(ds+'T00:00:00');
-  return d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short'});
-}
-function formatMonthYear(ym) {
-  const [y,m]=ym.split('-').map(Number);
-  return new Date(y,m-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
-}
+function formatDate(ds) { return new Date(ds+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+function formatDateShort(ds) { const d=new Date(ds+'T00:00:00'); return d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short'}); }
+function formatMonthYear(ym) { const [y,m]=ym.split('-').map(Number); return new Date(y,m-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'}); }
 function getDaysBetween(start, end) {
   const days=[]; const s=new Date(start+'T00:00:00'); const e=new Date(end+'T00:00:00');
-  for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1)){
-    days.push(`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`);
-  }
+  for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1)) days.push(`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`);
   return days;
 }
-function uuid4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
-    const r=Math.random()*16|0; return (c==='x'?r:(r&0x3|0x8)).toString(16);
-  });
-}
-function getMonthBounds(ym) {
-  return { min:`${ym}-01`, max:`${ym}-${pad(getDaysInMonth(ym))}` };
-}
+function uuid4() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{ const r=Math.random()*16|0; return (c==='x'?r:(r&0x3|0x8)).toString(16); }); }
+function getMonthBounds(ym) { return { min:`${ym}-01`, max:`${ym}-${pad(getDaysInMonth(ym))}` }; }
 
 // ==================== STATE ====================
 let S = {
   view: 'dashboard',
-  // — Form —
   selectedRoom: null,
-  formMode: 'single',           // 'single' | 'range'
+  formMode: 'single',
   selectedDate: getToday(),
-  singleData: {},               // { itemId: {p,a} }
-  rangeStart: null,
-  rangeEnd: null,
-  templateData: {},             // { itemId: {p,a} }
-  overrides: {},                // { dateKey: { itemId: {p,a} } }
-  activeOverrideDay: null,
+  singleData: {},
+  rangeStart: null, rangeEnd: null,
+  templateData: {}, overrides: {}, activeOverrideDay: null,
   verifikator: '',
-  // — Rekap —
   selectedMonth: getYearMonth(new Date()),
   rekapRoomId: ROOMS[0].id,
-  rekapCache: {},               // { 'roomId_ym': { dateKey: doc } }
-  // — Dashboard —
-  dashCache: {},                // { roomId: completionObj }
-  dashLoaded: false,
+  rekapCache: {},
+  dashCache: {}, dashLoaded: false,
+  exportMonth: getYearMonth(new Date()),
 };
 
 // ==================== LOADING ====================
@@ -526,36 +445,24 @@ const hideLoading = () => document.getElementById('loadingOverlay').style.displa
 let toastTimer;
 function showToast(msg, type='success') {
   clearTimeout(toastTimer);
-  const t = document.getElementById('toast');
+  const t=document.getElementById('toast');
   t.textContent=msg; t.className=`toast ${type}`;
-  toastTimer = setTimeout(()=>{ t.className='toast hide'; },2800);
+  toastTimer=setTimeout(()=>{ t.className='toast hide'; },2800);
 }
 
-// ==================== FIREBASE HELPERS ====================
-const fbRef = (roomId, dateKey) =>
-  db.collection('rooms').doc(roomId).collection('entries').doc(dateKey);
-
-async function fbSave(roomId, dateKey, data) {
-  await fbRef(roomId, dateKey).set(data);
-}
-async function fbLoad(roomId, dateKey) {
-  const doc = await fbRef(roomId, dateKey).get();
-  return doc.exists ? doc.data() : null;
-}
+// ==================== FIREBASE ====================
+const fbRef = (roomId, dateKey) => db.collection('rooms').doc(roomId).collection('entries').doc(dateKey);
+async function fbSave(roomId, dateKey, data) { await fbRef(roomId,dateKey).set(data); }
+async function fbLoad(roomId, dateKey) { const doc=await fbRef(roomId,dateKey).get(); return doc.exists?doc.data():null; }
 async function fbLoadMonth(roomId, ym) {
-  const {min,max} = getMonthBounds(ym);
-  const snap = await db.collection('rooms').doc(roomId).collection('entries')
+  const {min,max}=getMonthBounds(ym);
+  const snap=await db.collection('rooms').doc(roomId).collection('entries')
     .orderBy(firebase.firestore.FieldPath.documentId()).startAt(min).endAt(max).get();
-  const result={};
-  snap.forEach(doc => result[doc.id]=doc.data());
-  return result;
+  const result={}; snap.forEach(doc=>result[doc.id]=doc.data()); return result;
 }
 async function fbLoadTodayAll() {
-  const today=getToday();
-  const results={};
-  await Promise.all(ROOMS.map(async r=>{
-    results[r.id] = await fbLoad(r.id, today);
-  }));
+  const today=getToday(); const results={};
+  await Promise.all(ROOMS.map(async r=>{ results[r.id]=await fbLoad(r.id,today); }));
   return results;
 }
 
@@ -577,154 +484,85 @@ function navigate(view) {
   updateTopbar();
   if(view==='dashboard') loadDashboard();
   else if(view==='rekap') loadRekap();
-  else if(view==='export') render();  
   else render();
 }
 
 async function openRoom(roomId) {
-  const room=ROOMS.find(r=>r.id===roomId);
-  if(!room) return;
-  S.selectedRoom=room;
-  S.formMode='single';
-  S.selectedDate=getToday();
-  S.verifikator='';
-  S.overrides={};
-  S.activeOverrideDay=null;
-  S.view='form';
+  const room=ROOMS.find(r=>r.id===roomId); if(!room) return;
+  S.selectedRoom=room; S.formMode='single'; S.selectedDate=getToday();
+  S.verifikator=''; S.overrides={}; S.activeOverrideDay=null; S.view='form';
   document.getElementById('backBtn').style.display='block';
   document.getElementById('bottomNav').style.display='none';
   document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));
-  updateTopbar();
-
-  showLoading();
-  try {
-    const data = await fbLoad(roomId, S.selectedDate);
-    initSingleData(room, data);
-    S.verifikator = data?.verifikator || '';
-  } catch(e) {
-    showToast('⚠ Gagal memuat data. Cek koneksi.','error');
-    initSingleData(room, null);
-  }
-  hideLoading();
-  render();
+  updateTopbar(); showLoading();
+  try { const data=await fbLoad(roomId,S.selectedDate); initSingleData(room,data); S.verifikator=data?.verifikator||''; }
+  catch(e) { showToast('⚠ Gagal memuat data. Cek koneksi.','error'); initSingleData(room,null); }
+  hideLoading(); render();
 }
 
 function goBack() { navigate('dashboard'); }
 
 function updateTopbar() {
-  const title=document.getElementById('topbarTitle');
-  const sub=document.getElementById('topbarSub');
-  if(S.view==='form' && S.selectedRoom){
-    title.textContent=S.selectedRoom.emoji+' '+S.selectedRoom.name;
-    sub.textContent=formatDate(S.selectedDate);
-  } else {
-    title.textContent='🏥 Puskesmas Loa Duri';
-    sub.textContent='Jadwal Pemeliharaan Lingkungan Kerja';
-  }
+  const title=document.getElementById('topbarTitle'), sub=document.getElementById('topbarSub');
+  if(S.view==='form'&&S.selectedRoom){ title.textContent=S.selectedRoom.emoji+' '+S.selectedRoom.name; sub.textContent=formatDate(S.selectedDate); }
+  else { title.textContent='🏥 Puskesmas Loa Duri'; sub.textContent='Jadwal Pemeliharaan Lingkungan Kerja'; }
 }
 
 // ==================== FORM INIT ====================
 function initSingleData(room, doc) {
-  const fd={};
-  room.items.forEach(item=>{
-    fd[item.id] = doc?.items?.[item.id] ? {...doc.items[item.id]} : {p:false,a:null};
-  });
-  S.singleData=fd;
+  const fd={}; room.items.forEach(item=>{ fd[item.id]=doc?.items?.[item.id]?{...doc.items[item.id]}:{p:false,a:null}; }); S.singleData=fd;
 }
-function initTemplateData(room) {
-  const fd={};
-  room.items.forEach(item=>{ fd[item.id]={p:false,a:null}; });
-  S.templateData=fd;
-}
+function initTemplateData(room) { const fd={}; room.items.forEach(item=>{ fd[item.id]={p:false,a:null}; }); S.templateData=fd; }
 
 // ==================== FORM MODE ====================
 async function switchMode(mode) {
-  if(S.formMode===mode) return;
-  S.formMode=mode;
-  S.activeOverrideDay=null;
-  if(mode==='range'){
-    const today=getToday();
-    S.rangeStart=today; S.rangeEnd=today;
-    initTemplateData(S.selectedRoom);
-    S.overrides={};
-  } else {
-    showLoading();
-    try{
-      const data=await fbLoad(S.selectedRoom.id, S.selectedDate);
-      initSingleData(S.selectedRoom, data);
-      S.verifikator=data?.verifikator||'';
-    }catch(e){ initSingleData(S.selectedRoom,null); }
-    hideLoading();
-  }
+  if(S.formMode===mode) return; S.formMode=mode; S.activeOverrideDay=null;
+  if(mode==='range'){ S.rangeStart=getToday(); S.rangeEnd=getToday(); initTemplateData(S.selectedRoom); S.overrides={}; }
+  else { showLoading(); try{ const data=await fbLoad(S.selectedRoom.id,S.selectedDate); initSingleData(S.selectedRoom,data); S.verifikator=data?.verifikator||''; }catch(e){ initSingleData(S.selectedRoom,null); } hideLoading(); }
   render();
 }
 
 async function changeSingleDate(val) {
-  const ym = getToday().substring(0,7);
+  const ym=getToday().substring(0,7);
   if(val.substring(0,7)!==ym){ showToast('⚠ Hanya boleh pilih tanggal di bulan ini.','error'); return; }
-  S.selectedDate=val;
-  document.getElementById('topbarSub').textContent=formatDate(val);
-  showLoading();
-  try{
-    const data=await fbLoad(S.selectedRoom.id, val);
-    initSingleData(S.selectedRoom, data);
-    S.verifikator=data?.verifikator||'';
-  }catch(e){ initSingleData(S.selectedRoom,null); }
-  hideLoading();
-  render();
+  S.selectedDate=val; document.getElementById('topbarSub').textContent=formatDate(val); showLoading();
+  try{ const data=await fbLoad(S.selectedRoom.id,val); initSingleData(S.selectedRoom,data); S.verifikator=data?.verifikator||''; }catch(e){ initSingleData(S.selectedRoom,null); }
+  hideLoading(); render();
 }
 
 function changeRangeDate(field, val) {
   const ym=getToday().substring(0,7);
   if(val.substring(0,7)!==ym){ showToast('⚠ Hanya boleh pilih tanggal di bulan ini.','error'); return; }
   S[field]=val;
-  if(S.rangeStart && S.rangeEnd && S.rangeStart>S.rangeEnd){
-    if(field==='rangeStart') S.rangeEnd=S.rangeStart;
-    else S.rangeStart=S.rangeEnd;
-  }
-  // Hapus overrides di luar range baru
-  if(S.rangeStart && S.rangeEnd){
-    const valid=new Set(getDaysBetween(S.rangeStart,S.rangeEnd));
-    Object.keys(S.overrides).forEach(dk=>{ if(!valid.has(dk)) delete S.overrides[dk]; });
-    if(S.activeOverrideDay && !valid.has(S.activeOverrideDay)) S.activeOverrideDay=null;
-  }
+  if(S.rangeStart&&S.rangeEnd&&S.rangeStart>S.rangeEnd){ if(field==='rangeStart') S.rangeEnd=S.rangeStart; else S.rangeStart=S.rangeEnd; }
+  if(S.rangeStart&&S.rangeEnd){ const valid=new Set(getDaysBetween(S.rangeStart,S.rangeEnd)); Object.keys(S.overrides).forEach(dk=>{ if(!valid.has(dk)) delete S.overrides[dk]; }); if(S.activeOverrideDay&&!valid.has(S.activeOverrideDay)) S.activeOverrideDay=null; }
   render();
 }
 
 // ==================== SINGLE FORM ACTIONS ====================
 function toggleP(itemId) {
   S.singleData[itemId].p=!S.singleData[itemId].p;
-  const card=document.querySelector(`[data-item="${itemId}"]`);
-  if(!card) return;
-  const b=card.querySelector('.btn-p');
-  b.className=`act-btn btn-p${S.singleData[itemId].p?' active-p':''}`;
-  b.textContent=S.singleData[itemId].p?'✓ Planning':'○ Planning';
+  const card=document.querySelector(`[data-item="${itemId}"]`); if(!card) return;
+  const b=card.querySelector('.btn-p'); b.className=`act-btn btn-p${S.singleData[itemId].p?' active-p':''}`; b.textContent=S.singleData[itemId].p?'✓ Planning':'○ Planning';
 }
 function setA(itemId, val) {
   const fd=S.singleData[itemId]; fd.a=fd.a===val?null:val;
-  const card=document.querySelector(`[data-item="${itemId}"]`);
-  if(!card) return;
-  const b_ok=card.querySelector('.btn-ok');
-  const b_ru=card.querySelector('.btn-rusak');
-  const b_pe=card.querySelector('.btn-perbaikan');
-  b_ok.className=`act-btn btn-ok${fd.a==='ok'?' active-ok':''}`;b_ok.textContent=fd.a==='ok'?'✓ Sesuai':'○ Sesuai';
-  b_ru.className=`act-btn btn-rusak${fd.a==='rusak'?' active-rusak':''}`;b_ru.textContent=fd.a==='rusak'?'✗ Rusak':'○ Rusak';
-  b_pe.className=`act-btn btn-perbaikan${fd.a==='perbaikan'?' active-perbaikan':''}`;b_pe.textContent=fd.a==='perbaikan'?'⚠ Dalam Perbaikan':'○ Dalam Perbaikan';
+  const card=document.querySelector(`[data-item="${itemId}"]`); if(!card) return;
+  const bo=card.querySelector('.btn-ok'),br=card.querySelector('.btn-rusak'),bp=card.querySelector('.btn-perbaikan');
+  bo.className=`act-btn btn-ok${fd.a==='ok'?' active-ok':''}`;bo.textContent=fd.a==='ok'?'✓ Sesuai':'○ Sesuai';
+  br.className=`act-btn btn-rusak${fd.a==='rusak'?' active-rusak':''}`;br.textContent=fd.a==='rusak'?'✗ Rusak':'○ Rusak';
+  bp.className=`act-btn btn-perbaikan${fd.a==='perbaikan'?' active-perbaikan':''}`;bp.textContent=fd.a==='perbaikan'?'⚠ Dalam Perbaikan':'○ Dalam Perbaikan';
 }
 
 // ==================== TEMPLATE ACTIONS ====================
 function toggleTplP(itemId) {
   S.templateData[itemId].p=!S.templateData[itemId].p;
-  const card=document.querySelector(`[data-tpl="${itemId}"]`);
-  if(!card) return;
-  const b=card.querySelector('.tpl-p');
-  b.className=`act-btn tpl-p${S.templateData[itemId].p?' active-p':''}`;
-  b.textContent=S.templateData[itemId].p?'✓ Planning':'○ Planning';
+  const card=document.querySelector(`[data-tpl="${itemId}"]`); if(!card) return;
+  const b=card.querySelector('.tpl-p'); b.className=`act-btn tpl-p${S.templateData[itemId].p?' active-p':''}`; b.textContent=S.templateData[itemId].p?'✓ Planning':'○ Planning';
 }
 function setTplA(itemId, val) {
   const fd=S.templateData[itemId]; fd.a=fd.a===val?null:val;
-  const card=document.querySelector(`[data-tpl="${itemId}"]`);
-  if(!card) return;
+  const card=document.querySelector(`[data-tpl="${itemId}"]`); if(!card) return;
   const bo=card.querySelector('.tpl-ok'),br=card.querySelector('.tpl-rusak'),bp=card.querySelector('.tpl-perbaikan');
   bo.className=`act-btn tpl-ok${fd.a==='ok'?' active-ok':''}`;bo.textContent=fd.a==='ok'?'✓ Sesuai':'○ Sesuai';
   br.className=`act-btn tpl-rusak${fd.a==='rusak'?' active-rusak':''}`;br.textContent=fd.a==='rusak'?'✗ Rusak':'○ Rusak';
@@ -734,134 +572,63 @@ function setTplA(itemId, val) {
 // ==================== OVERRIDE ACTIONS ====================
 function toggleOverrideDay(dateKey) {
   if(S.activeOverrideDay===dateKey){ S.activeOverrideDay=null; }
-  else {
-    S.activeOverrideDay=dateKey;
-    if(!S.overrides[dateKey]){
-      S.overrides[dateKey]={};
-      S.selectedRoom.items.forEach(item=>{
-        S.overrides[dateKey][item.id]={...(S.templateData[item.id]||{p:false,a:null})};
-      });
-    }
-  }
+  else { S.activeOverrideDay=dateKey; if(!S.overrides[dateKey]){ S.overrides[dateKey]={}; S.selectedRoom.items.forEach(item=>{ S.overrides[dateKey][item.id]={...(S.templateData[item.id]||{p:false,a:null})}; }); } }
   rerenderExc();
 }
-function setOvA(dateKey, itemId, val) {
-  if(!S.overrides[dateKey]) return;
-  const fd=S.overrides[dateKey][itemId]; fd.a=fd.a===val?null:val;
-  rerenderExc();
-}
-function toggleOvP(dateKey, itemId) {
-  if(!S.overrides[dateKey]) return;
-  S.overrides[dateKey][itemId].p=!S.overrides[dateKey][itemId].p;
-  rerenderExc();
-}
-function removeOverride(dateKey) {
-  delete S.overrides[dateKey]; S.activeOverrideDay=null;
-  rerenderExc();
-}
-function rerenderExc() {
-  const el=document.getElementById('excContainer');
-  if(el) el.innerHTML=buildExcSection();
-}
+function setOvA(dateKey, itemId, val) { if(!S.overrides[dateKey]) return; const fd=S.overrides[dateKey][itemId]; fd.a=fd.a===val?null:val; rerenderExc(); }
+function toggleOvP(dateKey, itemId) { if(!S.overrides[dateKey]) return; S.overrides[dateKey][itemId].p=!S.overrides[dateKey][itemId].p; rerenderExc(); }
+function removeOverride(dateKey) { delete S.overrides[dateKey]; S.activeOverrideDay=null; rerenderExc(); }
+function rerenderExc() { const el=document.getElementById('excContainer'); if(el) el.innerHTML=buildExcSection(); }
 
 // ==================== SUBMIT ====================
 function updateVerifikator(val){ S.verifikator=val; }
 
 async function submitSingle() {
   if(!S.verifikator.trim()){ showToast('⚠ Nama verifikator harus diisi!','error'); return; }
-  const today=getToday();
-  const dateKey=S.selectedDate;
-  const doc={
-    roomId:S.selectedRoom.id, dateKey,
-    verifikator:S.verifikator.trim(),
-    submittedAt:firebase.firestore.FieldValue.serverTimestamp(),
-    submittedDate:today,
-    isBackdated:dateKey<today,
-    isPreFill:dateKey>today,
-    fromRange:false, rangeGroupId:null,
-    items:S.singleData,
-  };
+  const today=getToday(), dateKey=S.selectedDate;
+  const doc={ roomId:S.selectedRoom.id, dateKey, verifikator:S.verifikator.trim(), submittedAt:firebase.firestore.FieldValue.serverTimestamp(), submittedDate:today, isBackdated:dateKey<today, isPreFill:dateKey>today, fromRange:false, rangeGroupId:null, items:S.singleData };
   showLoading();
-  try{
-    await fbSave(S.selectedRoom.id, dateKey, doc);
-    showToast(`✓ Data ${formatDateShort(dateKey)} berhasil disimpan!`);
-    S.dashLoaded=false;
-    navigate('dashboard');
-  }catch(e){ showToast('⚠ Gagal menyimpan. Cek koneksi!','error'); }
+  try{ await fbSave(S.selectedRoom.id,dateKey,doc); showToast(`✓ Data ${formatDateShort(dateKey)} berhasil disimpan!`); S.dashLoaded=false; navigate('dashboard'); }
+  catch(e){ showToast('⚠ Gagal menyimpan. Cek koneksi!','error'); }
   hideLoading();
 }
 
 async function submitRange() {
   if(!S.verifikator.trim()){ showToast('⚠ Nama verifikator harus diisi!','error'); return; }
   if(!S.rangeStart||!S.rangeEnd){ showToast('⚠ Pilih rentang tanggal terlebih dahulu!','error'); return; }
-  const days=getDaysBetween(S.rangeStart,S.rangeEnd);
-  const today=getToday();
-  const groupId=uuid4();
+  const days=getDaysBetween(S.rangeStart,S.rangeEnd), today=getToday(), groupId=uuid4();
   showLoading();
   try{
-    await Promise.all(days.map(dateKey=>{
-      const items=S.overrides[dateKey]?{...S.overrides[dateKey]}:{...S.templateData};
-      return fbSave(S.selectedRoom.id, dateKey, {
-        roomId:S.selectedRoom.id, dateKey,
-        verifikator:S.verifikator.trim(),
-        submittedAt:firebase.firestore.FieldValue.serverTimestamp(),
-        submittedDate:today,
-        isBackdated:dateKey<today,
-        isPreFill:dateKey>today,
-        fromRange:true, rangeGroupId:groupId,
-        rangeFrom:S.rangeStart, rangeTo:S.rangeEnd,
-        items,
-      });
-    }));
-    showToast(`✓ ${days.length} hari berhasil disimpan!`);
-    S.dashLoaded=false;
-    navigate('dashboard');
+    await Promise.all(days.map(dateKey=>{ const items=S.overrides[dateKey]?{...S.overrides[dateKey]}:{...S.templateData}; return fbSave(S.selectedRoom.id,dateKey,{ roomId:S.selectedRoom.id, dateKey, verifikator:S.verifikator.trim(), submittedAt:firebase.firestore.FieldValue.serverTimestamp(), submittedDate:today, isBackdated:dateKey<today, isPreFill:dateKey>today, fromRange:true, rangeGroupId:groupId, rangeFrom:S.rangeStart, rangeTo:S.rangeEnd, items }); }));
+    showToast(`✓ ${days.length} hari berhasil disimpan!`); S.dashLoaded=false; navigate('dashboard');
   }catch(e){ showToast('⚠ Gagal menyimpan. Cek koneksi!','error'); }
   hideLoading();
 }
 
 // ==================== DASHBOARD ====================
 async function loadDashboard() {
-  render();
-  if(S.dashLoaded) return;
-  showLoading();
-  try{
-    const todayData=await fbLoadTodayAll();
-    ROOMS.forEach(r=>{ S.dashCache[r.id]=calcCompletion(r, todayData[r.id]); });
-    S.dashLoaded=true;
-  }catch(e){ showToast('⚠ Gagal memuat data. Cek koneksi.','error'); }
-  hideLoading();
-  render();
+  render(); if(S.dashLoaded) return; showLoading();
+  try{ const todayData=await fbLoadTodayAll(); ROOMS.forEach(r=>{ S.dashCache[r.id]=calcCompletion(r,todayData[r.id]); }); S.dashLoaded=true; }
+  catch(e){ showToast('⚠ Gagal memuat data. Cek koneksi.','error'); }
+  hideLoading(); render();
 }
 
 // ==================== REKAP ====================
 async function loadRekap() {
-  render();
-  const key=`${S.rekapRoomId}_${S.selectedMonth}`;
-  if(S.rekapCache[key]) return;
-  showLoading();
-  try{
-    S.rekapCache[key]=await fbLoadMonth(S.rekapRoomId, S.selectedMonth);
-  }catch(e){ showToast('⚠ Gagal memuat rekap. Cek koneksi.','error'); }
-  hideLoading();
-  render();
+  render(); const key=`${S.rekapRoomId}_${S.selectedMonth}`; if(S.rekapCache[key]) return; showLoading();
+  try{ S.rekapCache[key]=await fbLoadMonth(S.rekapRoomId,S.selectedMonth); }
+  catch(e){ showToast('⚠ Gagal memuat rekap. Cek koneksi.','error'); }
+  hideLoading(); render();
 }
 async function changeRekapRoom(val){ S.rekapRoomId=val; await loadRekap(); }
 async function changeMonth(val){ S.selectedMonth=val; await loadRekap(); }
 
 function getMonthlyData(roomId, ym) {
-  const key=`${roomId}_${ym}`;
-  const cached=S.rekapCache[key]||{};
-  const room=ROOMS.find(r=>r.id===roomId);
-  if(!room) return [];
+  const key=`${roomId}_${ym}`, cached=S.rekapCache[key]||{}, room=ROOMS.find(r=>r.id===roomId); if(!room) return [];
   return Array.from({length:getDaysInMonth(ym)},(_,i)=>{
-    const dateKey=`${ym}-${pad(i+1)}`;
-    const dd=cached[dateKey];
+    const dateKey=`${ym}-${pad(i+1)}`, dd=cached[dateKey];
     if(!dd) return {day:i+1,status:'empty',dateKey};
-    const total=room.items.length;
-    const ok=room.items.filter(it=>dd.items?.[it.id]?.a==='ok').length;
-    const rusak=room.items.filter(it=>dd.items?.[it.id]?.a==='rusak').length;
-    const perbaikan=room.items.filter(it=>dd.items?.[it.id]?.a==='perbaikan').length;
+    const total=room.items.length, ok=room.items.filter(it=>dd.items?.[it.id]?.a==='ok').length, rusak=room.items.filter(it=>dd.items?.[it.id]?.a==='rusak').length, perbaikan=room.items.filter(it=>dd.items?.[it.id]?.a==='perbaikan').length;
     if(rusak>0) return {day:i+1,status:'rusak',ok,rusak,perbaikan,total,dateKey};
     if(ok===total) return {day:i+1,status:'complete',ok,total,dateKey};
     if(ok+perbaikan>0) return {day:i+1,status:'partial',ok,total,dateKey};
@@ -869,160 +636,170 @@ function getMonthlyData(roomId, ym) {
   });
 }
 
+// ==================== NOTIFIKASI ====================
+const NOTIF_HOUR=8, NOTIF_MINUTE=0;
+
+async function initNotif() {
+  if(!('serviceWorker' in navigator)||!('Notification' in window)) return;
+  try {
+    const reg=await navigator.serviceWorker.register('/sw.js');
+    navigator.serviceWorker.ready.then(r=>{ r.active?.postMessage({type:'SCHEDULE_NOTIF',hour:NOTIF_HOUR,minute:NOTIF_MINUTE}); });
+  } catch(e){ console.warn('SW register gagal:',e); }
+}
+
+function getNotifStatus() { if(!('Notification' in window)) return 'unsupported'; return Notification.permission; }
+
+async function requestNotif() {
+  const perm=await Notification.requestPermission();
+  if(perm==='granted'){ await initNotif(); showToast('✓ Notifikasi pengingat aktif!'); }
+  else { showToast('⚠ Izin notifikasi ditolak.','error'); }
+  S.dashLoaded=false; loadDashboard();
+}
+
+async function disableNotif() { showToast('Matikan notifikasi di pengaturan browser → izin situs','error'); }
+
+function buildNotifBanner() {
+  const status=getNotifStatus(); if(status==='unsupported') return '';
+  if(status==='granted') return `<div class="notif-banner"><div class="notif-banner-icon">🔔</div><div class="notif-banner-text"><div class="notif-banner-title">Notifikasi Aktif</div><div class="notif-banner-sub">Pengingat harian jam 08.00 sudah aktif di perangkat ini</div></div><button class="notif-btn notif-btn-off" onclick="disableNotif()">Matikan</button></div>`;
+  if(status==='denied') return `<div class="notif-banner"><div class="notif-banner-icon">🔕</div><div class="notif-banner-text"><div class="notif-banner-title">Notifikasi Diblokir</div><div class="notif-banner-sub">Aktifkan manual di pengaturan browser → izin notifikasi</div></div></div>`;
+  return `<div class="notif-banner"><div class="notif-banner-icon">🔔</div><div class="notif-banner-text"><div class="notif-banner-title">Aktifkan Pengingat Harian</div><div class="notif-banner-sub">Notifikasi jam 08.00 setiap Senin–Sabtu (UGD setiap hari)</div></div><button class="notif-btn notif-btn-ask" onclick="requestNotif()">Aktifkan</button></div>`;
+}
+
+// ==================== EXPORT ====================
+function renderExport(c) {
+  c.innerHTML=`
+  <div class="page-title">📤 Export Data</div>
+  <input type="month" class="export-month-sel" id="exportMonthSel" value="${S.exportMonth}" onchange="S.exportMonth=this.value">
+  <div class="export-card">
+    <div class="export-card-title">📊 Export Excel (.xlsx)</div>
+    <div class="export-card-sub">3 sheet: Ringkasan semua ruangan, Log Masalah, dan detail tiap ruangan.</div>
+    <button class="export-btn export-btn-excel" id="btnExcel" onclick="exportExcel()">📥 Unduh Excel</button>
+    <div class="export-info">✓ Sheet Ringkasan — jumlah hari lengkap/sebagian/masalah per ruangan<br>✓ Sheet Log Masalah — item rusak & perbaikan + tanggal + verifikator<br>✓ Sheet per Ruangan — kondisi tiap item setiap hari</div>
+  </div>
+  <div class="export-card">
+    <div class="export-card-title">📄 Export PDF</div>
+    <div class="export-card-sub">Ringkasan + Log Masalah dalam format PDF siap cetak atau kirim via WhatsApp.</div>
+    <button class="export-btn export-btn-pdf" id="btnPdf" onclick="exportPDF()">📥 Unduh PDF</button>
+    <div class="export-info">✓ Halaman Ringkasan — tabel semua ruangan<br>✓ Halaman Log Masalah — tabel item bermasalah lengkap</div>
+  </div>`;
+}
+
+async function fetchAllRoomsMonth(ym) {
+  showLoading(); const allData={};
+  try{ await Promise.all(ROOMS.map(async r=>{ allData[r.id]=await fbLoadMonth(r.id,ym); })); }
+  catch(e){ showToast('⚠ Gagal memuat data. Cek koneksi.','error'); }
+  hideLoading(); return allData;
+}
+
+function buildSummaryRows(allData, ym) {
+  return ROOMS.map(room=>{
+    const days=getDaysInMonth(ym); let lengkap=0,sebagian=0,masalah=0,belum=0;
+    for(let i=1;i<=days;i++){ const dk=`${ym}-${pad(i)}`,dd=allData[room.id]?.[dk]; if(!dd){belum++;continue;} const total=room.items.length,ok=room.items.filter(it=>dd.items?.[it.id]?.a==='ok').length,rusak=room.items.filter(it=>dd.items?.[it.id]?.a==='rusak').length; if(rusak>0) masalah++; else if(ok===total) lengkap++; else if(ok>0) sebagian++; else belum++; }
+    return [room.emoji+' '+room.name,room.kode,room.lokasi,lengkap,sebagian,masalah,belum];
+  });
+}
+
+function buildLogRows(allData, ym) {
+  const rows=[],days=getDaysInMonth(ym);
+  ROOMS.forEach(room=>{ for(let i=1;i<=days;i++){ const dk=`${ym}-${pad(i)}`,dd=allData[room.id]?.[dk]; if(!dd) continue; room.items.forEach(item=>{ const a=dd.items?.[item.id]?.a; if(a==='rusak'||a==='perbaikan') rows.push([dk,room.emoji+' '+room.name,item.name,a==='rusak'?'Rusak':'Dalam Perbaikan',dd.verifikator||'-',dd.isBackdated?'Ya':'Tidak']); }); } });
+  return rows;
+}
+
+async function exportExcel() {
+  const ym=S.exportMonth||S.selectedMonth, btn=document.getElementById('btnExcel');
+  btn.disabled=true; btn.textContent='⏳ Menyiapkan...';
+  const allData=await fetchAllRoomsMonth(ym), wb=XLSX.utils.book_new(), monthLabel=formatMonthYear(ym);
+  const wsSum=XLSX.utils.aoa_to_sheet([['REKAP PEMELIHARAAN LINGKUNGAN KERJA — '+monthLabel.toUpperCase()],[],['Ruangan','Kode','Lokasi','✓ Lengkap','~ Sebagian','! Masalah','○ Belum'],...buildSummaryRows(allData,ym)]);
+  wsSum['!cols']=[{wch:28},{wch:8},{wch:8},{wch:10},{wch:10},{wch:10},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,wsSum,'Ringkasan');
+  const logRows=buildLogRows(allData,ym);
+  const wsLog=XLSX.utils.aoa_to_sheet([['LOG MASALAH — '+monthLabel.toUpperCase()],[],['Tanggal','Ruangan','Item','Status','Verifikator','Backdate?'],...(logRows.length>0?logRows:[['(Tidak ada masalah tercatat di bulan ini)']])]);
+  wsLog['!cols']=[{wch:12},{wch:28},{wch:22},{wch:18},{wch:20},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,wsLog,'Log Masalah');
+  const days=getDaysInMonth(ym), dayNums=Array.from({length:days},(_,i)=>i+1);
+  ROOMS.forEach(room=>{
+    const ws=XLSX.utils.aoa_to_sheet([[room.name.toUpperCase()+' ('+room.kode+') — '+monthLabel.toUpperCase()],[],['Item / Hari ke-',...dayNums],...room.items.map(item=>[item.name,...dayNums.map(i=>{ const a=allData[room.id]?.[`${ym}-${pad(i)}`]?.items?.[item.id]?.a; return a==='ok'?'✓':a==='rusak'?'R':a==='perbaikan'?'P':''; })]),[],['Verifikator',...dayNums.map(i=>allData[room.id]?.[`${ym}-${pad(i)}`]?.verifikator||'')],[],['','Keterangan: ✓=Sesuai  R=Rusak  P=Dalam Perbaikan']]);
+    ws['!cols']=[{wch:22},...dayNums.map(()=>({wch:4}))];
+    XLSX.utils.book_append_sheet(wb,ws,room.name.substring(0,31));
+  });
+  XLSX.writeFile(wb,`Rekap_PuskesmasLoaDuri_${ym}.xlsx`);
+  btn.disabled=false; btn.innerHTML='📥 Unduh Excel'; showToast('✓ File Excel berhasil diunduh!');
+}
+
+async function exportPDF() {
+  const ym=S.exportMonth||S.selectedMonth, btn=document.getElementById('btnPdf');
+  btn.disabled=true; btn.textContent='⏳ Menyiapkan...';
+  const allData=await fetchAllRoomsMonth(ym), {jsPDF}=window.jspdf, doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'}), monthLabel=formatMonthYear(ym);
+  doc.setFontSize(13);doc.setFont('helvetica','bold');doc.text('REKAP PEMELIHARAAN LINGKUNGAN KERJA',14,18);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text('Puskesmas Loa Duri  |  '+monthLabel,14,25);
+  doc.setDrawColor(15,118,110);doc.setLineWidth(0.5);doc.line(14,28,196,28);
+  doc.autoTable({startY:32,head:[['Ruangan','Kode','Lok.','✓ Lengkap','~ Sebagian','! Masalah','○ Belum']],body:buildSummaryRows(allData,ym),styles:{fontSize:9},headStyles:{fillColor:[15,118,110],textColor:255,fontStyle:'bold'},alternateRowStyles:{fillColor:[240,253,244]},columnStyles:{0:{cellWidth:55},1:{cellWidth:14},2:{cellWidth:10},3:{cellWidth:22,halign:'center'},4:{cellWidth:22,halign:'center'},5:{cellWidth:22,halign:'center'},6:{cellWidth:22,halign:'center'}},margin:{left:14,right:14}});
+  doc.addPage();
+  doc.setFontSize(13);doc.setFont('helvetica','bold');doc.text('LOG MASALAH',14,18);
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text('Item Rusak & Dalam Perbaikan  |  '+monthLabel,14,25);doc.line(14,28,196,28);
+  const logRows=buildLogRows(allData,ym);
+  doc.autoTable({startY:32,head:[['Tanggal','Ruangan','Item','Status','Verifikator','Backdate']],body:logRows.length>0?logRows:[['—','Tidak ada masalah tercatat','','','','']],styles:{fontSize:8.5},headStyles:{fillColor:[153,27,27],textColor:255,fontStyle:'bold'},alternateRowStyles:{fillColor:[254,242,242]},columnStyles:{0:{cellWidth:22},1:{cellWidth:45},2:{cellWidth:38},3:{cellWidth:28},4:{cellWidth:33},5:{cellWidth:18,halign:'center'}},margin:{left:14,right:14}});
+  const pageCount=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pageCount;i++){ doc.setPage(i);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(148,163,184);doc.text(`Puskesmas Loa Duri  |  Dicetak: ${formatDate(getToday())}  |  Hal ${i} / ${pageCount}`,14,290); }
+  doc.save(`Rekap_PuskesmasLoaDuri_${ym}.pdf`);
+  btn.disabled=false; btn.innerHTML='📥 Unduh PDF'; showToast('✓ File PDF berhasil diunduh!');
+}
+
+// ==================== DOWNLOAD QR ====================
+async function downloadQR(roomId, roomName) {
+  if(!confirm(`Unduh QR Code untuk ${roomName}?`)) return;
+  const btn=document.getElementById(`dl-${roomId}`);
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Mengunduh...'; }
+  try {
+    const baseUrl='https://puskesmas-loaduri.vercel.app', url=`${baseUrl}?room=${roomId}`;
+    const qrSrc=`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`;
+    const resp=await fetch(qrSrc), blob=await resp.blob(), a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download=`QR-${roomName}.png`; a.click(); URL.revokeObjectURL(a.href);
+    if(btn){ btn.disabled=false; btn.textContent='⬇ Unduh QR'; }
+  } catch(e) { showToast('⚠ Gagal mengunduh QR. Cek koneksi.','error'); if(btn){ btn.disabled=false; btn.textContent='⬇ Unduh QR'; } }
+}
+
 // ==================== RENDER ====================
 function render() {
-  updateTopbar();
-  const c=document.getElementById('mainContent');
+  updateTopbar(); const c=document.getElementById('mainContent');
   if(S.view==='dashboard') renderDashboard(c);
   else if(S.view==='form') renderForm(c);
   else if(S.view==='rekap') renderRekap(c);
   else if(S.view==='export') renderExport(c);
+  else if(S.view==='qr') renderQR(c);
 }
 
 // ---- DASHBOARD ----
 function renderDashboard(c) {
-  const today=getToday();
-  const total=ROOMS.length;
-  const done=ROOMS.filter(r=>S.dashCache[r.id]?.done).length;
-  const loaded=S.dashLoaded;
-  let html=`
-  <div class="hero">
-    <div class="hero-date">${formatDate(today)}</div>
-    <div class="hero-greeting">Halo! 👋</div>
-    <div class="hero-sub">Puskesmas Loa Duri – Loa Duri Ulu</div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num">${loaded?done:'–'}</div><div class="hero-stat-lbl">Selesai</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">${loaded?(total-done):'–'}</div><div class="hero-stat-lbl">Belum Diisi</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">${total}</div><div class="hero-stat-lbl">Total Ruangan</div></div>
-    </div>
-  </div>
+  const today=getToday(), total=ROOMS.length, done=ROOMS.filter(r=>S.dashCache[r.id]?.done).length, loaded=S.dashLoaded;
+  let html=`<div class="hero"><div class="hero-date">${formatDate(today)}</div><div class="hero-greeting">Halo! 👋</div><div class="hero-sub">Puskesmas Loa Duri – Loa Duri Ulu</div><div class="hero-stats"><div class="hero-stat"><div class="hero-stat-num">${loaded?done:'–'}</div><div class="hero-stat-lbl">Selesai</div></div><div class="hero-stat"><div class="hero-stat-num">${loaded?(total-done):'–'}</div><div class="hero-stat-lbl">Belum Diisi</div></div><div class="hero-stat"><div class="hero-stat-num">${total}</div><div class="hero-stat-lbl">Total Ruangan</div></div></div></div>
   ${buildNotifBanner()}
   <div class="sec-label">Ruangan</div>`;
   ROOMS.forEach(room=>{
     const comp=S.dashCache[room.id];
-    if(!comp){
-      html+=`<div class="room-card">
-        <div class="room-emoji">${room.emoji}</div>
-        <div class="room-info">
-          <div class="room-name">${room.name}</div>
-          <div class="room-meta">${room.kode} · ${room.lokasi}</div>
-          <div class="skel" style="width:70%;height:4px;margin-top:8px"></div>
-        </div>
-        <div class="skel" style="width:44px;height:22px;border-radius:20px"></div>
-      </div>`;
-      return;
-    }
-    html+=`<div class="room-card${comp.done?' done':''}" onclick="openRoom('${room.id}')">
-      <div class="room-emoji">${room.emoji}</div>
-      <div class="room-info">
-        <div class="room-name">${room.name}</div>
-        <div class="room-meta">${room.kode} · ${room.lokasi} · ${room.items.length} item</div>
-        ${comp.filled>0?`<div class="room-progress"><div class="room-progress-fill${comp.done?' done':''}" style="width:${comp.pct}%"></div></div>`:''}
-        ${comp.verifikator?`<div class="room-vname">✓ ${comp.verifikator}</div>`:''}
-      </div>
-      <div class="room-pct${comp.done?' done':''}">${comp.filled>0?comp.pct+'%':'Belum'}</div>
-    </div>`;
+    if(!comp){ html+=`<div class="room-card"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi}</div><div class="skel" style="width:70%;height:4px;margin-top:8px"></div></div><div class="skel" style="width:44px;height:22px;border-radius:20px"></div></div>`; return; }
+    html+=`<div class="room-card${comp.done?' done':''}" onclick="openRoom('${room.id}')"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi} · ${room.items.length} item</div>${comp.filled>0?`<div class="room-progress"><div class="room-progress-fill${comp.done?' done':''}" style="width:${comp.pct}%"></div></div>`:''}${comp.verifikator?`<div class="room-vname">✓ ${comp.verifikator}</div>`:''}</div><div class="room-pct${comp.done?' done':''}">${comp.filled>0?comp.pct+'%':'Belum'}</div></div>`;
   });
   c.innerHTML=html;
 }
 
 // ---- FORM ----
 function renderForm(c) {
-  const today=getToday();
-  const ym=today.substring(0,7);
-  const {min,max}=getMonthBounds(ym);
-
-  let html=`<div class="mode-tabs">
-    <button class="mode-tab${S.formMode==='single'?' active':''}" onclick="switchMode('single')">📅 Hari Tertentu</button>
-    <button class="mode-tab${S.formMode==='range'?' active':''}" onclick="switchMode('range')">📆 Range Tanggal</button>
-  </div>`;
-
+  const today=getToday(), ym=today.substring(0,7), {min,max}=getMonthBounds(ym);
+  let html=`<div class="mode-tabs"><button class="mode-tab${S.formMode==='single'?' active':''}" onclick="switchMode('single')">📅 Hari Tertentu</button><button class="mode-tab${S.formMode==='range'?' active':''}" onclick="switchMode('range')">📆 Range Tanggal</button></div>`;
   if(S.formMode==='single'){
     const isBack=S.selectedDate<today, isPre=S.selectedDate>today;
-    html+=`<div class="date-row">
-      <label>📅 Tanggal</label>
-      <input type="date" class="date-inp" value="${S.selectedDate}" min="${min}" max="${max}"
-        onchange="changeSingleDate(this.value)">
-      ${isBack?`<span class="badge badge-back">⏪ Backdate</span>`:''}
-      ${isPre?`<span class="badge badge-pre">⏩ Pre-fill</span>`:''}
-    </div>
-    <div class="form-legend"><b>P</b> = Planning &nbsp;|&nbsp; <b>A</b> = Kondisi aktual</div>`;
-
-    S.selectedRoom.items.forEach((item,idx)=>{
-      const fd=S.singleData[item.id]||{p:false,a:null};
-      html+=`<div class="item-card" data-item="${item.id}">
-        <span class="item-num">#${idx+1}</span><span class="item-name">${item.name}</span>
-        <div class="item-standar">Standar: ${item.standar}</div>
-        <div class="item-actions">
-          <button class="act-btn btn-p${fd.p?' active-p':''}" onclick="toggleP('${item.id}')">${fd.p?'✓':'○'} Planning</button>
-          <button class="act-btn btn-ok${fd.a==='ok'?' active-ok':''}" onclick="setA('${item.id}','ok')">${fd.a==='ok'?'✓':'○'} Sesuai</button>
-          <button class="act-btn btn-rusak${fd.a==='rusak'?' active-rusak':''}" onclick="setA('${item.id}','rusak')">${fd.a==='rusak'?'✗':'○'} Rusak</button>
-        </div>
-        <div class="item-actions" style="margin-top:5px">
-          <button class="act-btn btn-perbaikan${fd.a==='perbaikan'?' active-perbaikan':''}" onclick="setA('${item.id}','perbaikan')" style="flex:none;padding:6px 14px">${fd.a==='perbaikan'?'⚠':'○'} Dalam Perbaikan</button>
-        </div>
-      </div>`;
-    });
-
-    html+=`<div class="item-card">
-      <label class="field-label">Nama Verifikator *</label>
-      <input class="field-input" type="text" placeholder="Masukkan nama verifikator..."
-        value="${S.verifikator}" oninput="updateVerifikator(this.value)">
-    </div>
-    <button class="submit-btn" onclick="submitSingle()">💾 Simpan Data</button>`;
-
+    html+=`<div class="date-row"><label>📅 Tanggal</label><input type="date" class="date-inp" value="${S.selectedDate}" min="${min}" max="${max}" onchange="changeSingleDate(this.value)">${isBack?`<span class="badge badge-back">⏪ Backdate</span>`:''}${isPre?`<span class="badge badge-pre">⏩ Pre-fill</span>`:''}</div><div class="form-legend"><b>P</b> = Planning &nbsp;|&nbsp; <b>A</b> = Kondisi aktual</div>`;
+    S.selectedRoom.items.forEach((item,idx)=>{ const fd=S.singleData[item.id]||{p:false,a:null}; html+=`<div class="item-card" data-item="${item.id}"><span class="item-num">#${idx+1}</span><span class="item-name">${item.name}</span><div class="item-standar">Standar: ${item.standar}</div><div class="item-actions"><button class="act-btn btn-p${fd.p?' active-p':''}" onclick="toggleP('${item.id}')">${fd.p?'✓':'○'} Planning</button><button class="act-btn btn-ok${fd.a==='ok'?' active-ok':''}" onclick="setA('${item.id}','ok')">${fd.a==='ok'?'✓':'○'} Sesuai</button><button class="act-btn btn-rusak${fd.a==='rusak'?' active-rusak':''}" onclick="setA('${item.id}','rusak')">${fd.a==='rusak'?'✗':'○'} Rusak</button></div><div class="item-actions" style="margin-top:5px"><button class="act-btn btn-perbaikan${fd.a==='perbaikan'?' active-perbaikan':''}" onclick="setA('${item.id}','perbaikan')" style="flex:none;padding:6px 14px">${fd.a==='perbaikan'?'⚠':'○'} Dalam Perbaikan</button></div></div>`; });
+    html+=`<div class="item-card"><label class="field-label">Nama Verifikator *</label><input class="field-input" type="text" placeholder="Masukkan nama verifikator..." value="${S.verifikator}" oninput="updateVerifikator(this.value)"></div><button class="submit-btn" onclick="submitSingle()">💾 Simpan Data</button>`;
   } else {
-    // ---- RANGE MODE ----
-    const rs=S.rangeStart||today, re=S.rangeEnd||today;
-    const days=(S.rangeStart&&S.rangeEnd)?getDaysBetween(rs,re):[];
-
-    html+=`<div class="range-dates">
-      <div class="range-date-item">
-        <label>📅 Dari Tanggal</label>
-        <input type="date" class="date-inp" value="${rs}" min="${min}" max="${max}"
-          onchange="changeRangeDate('rangeStart',this.value)">
-      </div>
-      <div class="range-date-item">
-        <label>📅 Sampai Tanggal</label>
-        <input type="date" class="date-inp" value="${re}" min="${min}" max="${max}"
-          onchange="changeRangeDate('rangeEnd',this.value)">
-      </div>
-    </div>`;
-
-    if(days.length>0){
-      html+=`<div class="range-summary">📋 Akan mengisi <b>${days.length} hari</b>: ${formatDateShort(rs)} – ${formatDateShort(re)}</div>`;
-    }
-
+    const rs=S.rangeStart||today, re=S.rangeEnd||today, days=(S.rangeStart&&S.rangeEnd)?getDaysBetween(rs,re):[];
+    html+=`<div class="range-dates"><div class="range-date-item"><label>📅 Dari Tanggal</label><input type="date" class="date-inp" value="${rs}" min="${min}" max="${max}" onchange="changeRangeDate('rangeStart',this.value)"></div><div class="range-date-item"><label>📅 Sampai Tanggal</label><input type="date" class="date-inp" value="${re}" min="${min}" max="${max}" onchange="changeRangeDate('rangeEnd',this.value)"></div></div>`;
+    if(days.length>0) html+=`<div class="range-summary">📋 Akan mengisi <b>${days.length} hari</b>: ${formatDateShort(rs)} – ${formatDateShort(re)}</div>`;
     html+=`<div class="form-legend">Isi kondisi <b>template</b> yang berlaku untuk semua hari dalam range ini.</div>`;
-
-    S.selectedRoom.items.forEach((item,idx)=>{
-      const fd=S.templateData[item.id]||{p:false,a:null};
-      html+=`<div class="item-card" data-tpl="${item.id}">
-        <span class="item-num">#${idx+1}</span><span class="item-name">${item.name}</span>
-        <div class="item-standar">Standar: ${item.standar}</div>
-        <div class="item-actions">
-          <button class="act-btn tpl-p${fd.p?' active-p':''}" onclick="toggleTplP('${item.id}')">${fd.p?'✓':'○'} Planning</button>
-          <button class="act-btn tpl-ok${fd.a==='ok'?' active-ok':''}" onclick="setTplA('${item.id}','ok')">${fd.a==='ok'?'✓':'○'} Sesuai</button>
-          <button class="act-btn tpl-rusak${fd.a==='rusak'?' active-rusak':''}" onclick="setTplA('${item.id}','rusak')">${fd.a==='rusak'?'✗':'○'} Rusak</button>
-        </div>
-        <div class="item-actions" style="margin-top:5px">
-          <button class="act-btn tpl-perbaikan${fd.a==='perbaikan'?' active-perbaikan':''}" onclick="setTplA('${item.id}','perbaikan')" style="flex:none;padding:6px 14px">${fd.a==='perbaikan'?'⚠':'○'} Dalam Perbaikan</button>
-        </div>
-      </div>`;
-    });
-
-    if(days.length>0){
-      html+=`<div id="excContainer">${buildExcSection()}</div>`;
-    }
-
-    html+=`<div class="item-card">
-      <label class="field-label">Nama Verifikator *</label>
-      <input class="field-input" type="text" placeholder="Masukkan nama verifikator..."
-        value="${S.verifikator}" oninput="updateVerifikator(this.value)">
-    </div>
-    <button class="submit-btn" onclick="submitRange()"${days.length===0?' disabled':''}>
-      💾 Simpan ${days.length>0?days.length+' Hari':'–'}
-    </button>`;
+    S.selectedRoom.items.forEach((item,idx)=>{ const fd=S.templateData[item.id]||{p:false,a:null}; html+=`<div class="item-card" data-tpl="${item.id}"><span class="item-num">#${idx+1}</span><span class="item-name">${item.name}</span><div class="item-standar">Standar: ${item.standar}</div><div class="item-actions"><button class="act-btn tpl-p${fd.p?' active-p':''}" onclick="toggleTplP('${item.id}')">${fd.p?'✓':'○'} Planning</button><button class="act-btn tpl-ok${fd.a==='ok'?' active-ok':''}" onclick="setTplA('${item.id}','ok')">${fd.a==='ok'?'✓':'○'} Sesuai</button><button class="act-btn tpl-rusak${fd.a==='rusak'?' active-rusak':''}" onclick="setTplA('${item.id}','rusak')">${fd.a==='rusak'?'✗':'○'} Rusak</button></div><div class="item-actions" style="margin-top:5px"><button class="act-btn tpl-perbaikan${fd.a==='perbaikan'?' active-perbaikan':''}" onclick="setTplA('${item.id}','perbaikan')" style="flex:none;padding:6px 14px">${fd.a==='perbaikan'?'⚠':'○'} Dalam Perbaikan</button></div></div>`; });
+    if(days.length>0) html+=`<div id="excContainer">${buildExcSection()}</div>`;
+    html+=`<div class="item-card"><label class="field-label">Nama Verifikator *</label><input class="field-input" type="text" placeholder="Masukkan nama verifikator..." value="${S.verifikator}" oninput="updateVerifikator(this.value)"></div><button class="submit-btn" onclick="submitRange()"${days.length===0?' disabled':''}>💾 Simpan ${days.length>0?days.length+' Hari':'–'}</button>`;
   }
   c.innerHTML=html;
 }
@@ -1030,438 +807,46 @@ function renderForm(c) {
 function buildExcSection() {
   if(!S.rangeStart||!S.rangeEnd) return '';
   const days=getDaysBetween(S.rangeStart,S.rangeEnd);
-  let html=`<div class="exc-section">
-    <div class="exc-title">📌 Ada Hari yang Kondisinya Berbeda? <span style="font-weight:400;color:#94a3b8">(Opsional)</span></div>
-    <div class="exc-hint">Tap tanggal di bawah untuk mengatur kondisi berbeda dari template</div>
-    <div class="day-chips">`;
-
-  days.forEach(dateKey=>{
-    const hasOv=S.overrides[dateKey]!==undefined;
-    const isAct=S.activeOverrideDay===dateKey;
-    const d=new Date(dateKey+'T00:00:00');
-    const lbl=`${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]} ${d.getDate()}/${d.getMonth()+1}`;
-    html+=`<button class="day-chip${isAct?' active':hasOv?' has-override':''}"
-      onclick="toggleOverrideDay('${dateKey}')">${lbl}${hasOv&&!isAct?' ✏':''}</button>`;
-  });
+  let html=`<div class="exc-section"><div class="exc-title">📌 Ada Hari yang Kondisinya Berbeda? <span style="font-weight:400;color:#94a3b8">(Opsional)</span></div><div class="exc-hint">Tap tanggal di bawah untuk mengatur kondisi berbeda dari template</div><div class="day-chips">`;
+  days.forEach(dateKey=>{ const hasOv=S.overrides[dateKey]!==undefined, isAct=S.activeOverrideDay===dateKey, d=new Date(dateKey+'T00:00:00'), lbl=`${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]} ${d.getDate()}/${d.getMonth()+1}`; html+=`<button class="day-chip${isAct?' active':hasOv?' has-override':''}" onclick="toggleOverrideDay('${dateKey}')">${lbl}${hasOv&&!isAct?' ✏':''}</button>`; });
   html+=`</div>`;
-
-  // Override panel for active day
-  if(S.activeOverrideDay && S.overrides[S.activeOverrideDay]){
-    const dk=S.activeOverrideDay;
-    const ov=S.overrides[dk];
-    html+=`<div class="override-panel">
-      <div class="override-panel-header">
-        <div class="override-panel-title">✏ Override: ${formatDateShort(dk)}</div>
-        <button class="override-del-btn" onclick="removeOverride('${dk}')">🗑 Hapus</button>
-      </div>`;
-    S.selectedRoom.items.forEach(item=>{
-      const fd=ov[item.id]||{p:false,a:null};
-      html+=`<div class="override-item">
-        <div class="override-item-name">${item.name}</div>
-        <div class="ov-actions">
-          <button class="ov-btn${fd.p?' active-p':''}" onclick="toggleOvP('${dk}','${item.id}')" style="flex:none;padding:6px 10px">${fd.p?'✓':'○'} P</button>
-          <button class="ov-btn${fd.a==='ok'?' active-ok':''}" onclick="setOvA('${dk}','${item.id}','ok')">${fd.a==='ok'?'✓':'○'} Sesuai</button>
-          <button class="ov-btn${fd.a==='rusak'?' active-rusak':''}" onclick="setOvA('${dk}','${item.id}','rusak')">${fd.a==='rusak'?'✗':'○'} Rusak</button>
-          <button class="ov-btn${fd.a==='perbaikan'?' active-perbaikan':''}" onclick="setOvA('${dk}','${item.id}','perbaikan')">${fd.a==='perbaikan'?'⚠':'○'} Perbaikan</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div>`;
-  }
-  html+=`</div>`;
-  return html;
+  if(S.activeOverrideDay&&S.overrides[S.activeOverrideDay]){ const dk=S.activeOverrideDay, ov=S.overrides[dk]; html+=`<div class="override-panel"><div class="override-panel-header"><div class="override-panel-title">✏ Override: ${formatDateShort(dk)}</div><button class="override-del-btn" onclick="removeOverride('${dk}')">🗑 Hapus</button></div>`; S.selectedRoom.items.forEach(item=>{ const fd=ov[item.id]||{p:false,a:null}; html+=`<div class="override-item"><div class="override-item-name">${item.name}</div><div class="ov-actions"><button class="ov-btn${fd.p?' active-p':''}" onclick="toggleOvP('${dk}','${item.id}')" style="flex:none;padding:6px 10px">${fd.p?'✓':'○'} P</button><button class="ov-btn${fd.a==='ok'?' active-ok':''}" onclick="setOvA('${dk}','${item.id}','ok')">${fd.a==='ok'?'✓':'○'} Sesuai</button><button class="ov-btn${fd.a==='rusak'?' active-rusak':''}" onclick="setOvA('${dk}','${item.id}','rusak')">${fd.a==='rusak'?'✗':'○'} Rusak</button><button class="ov-btn${fd.a==='perbaikan'?' active-perbaikan':''}" onclick="setOvA('${dk}','${item.id}','perbaikan')">${fd.a==='perbaikan'?'⚠':'○'} Perbaikan</button></div></div>`; }); html+=`</div>`; }
+  html+=`</div>`; return html;
 }
 
 // ---- REKAP ----
 function renderRekap(c) {
-  const container=c||document.getElementById('mainContent');
-  const room=ROOMS.find(r=>r.id===S.rekapRoomId);
-  const key=`${S.rekapRoomId}_${S.selectedMonth}`;
-  const isLoaded=!!S.rekapCache[key];
-  const monthData=getMonthlyData(S.rekapRoomId, S.selectedMonth);
-  const complete=monthData.filter(d=>d.status==='complete').length;
-  const partial=monthData.filter(d=>d.status==='partial').length;
-  const rusakCount=monthData.filter(d=>d.status==='rusak').length;
-  const days=getDaysInMonth(S.selectedMonth);
-  const [year,month]=S.selectedMonth.split('-').map(Number);
-  const firstDow=new Date(year,month-1,1).getDay();
-  const today=getToday();
-
-  let calCells='';
-  for(let i=0;i<firstDow;i++) calCells+=`<div></div>`;
-  monthData.forEach(d=>{
-    const isTdy=d.dateKey===today;
-    const mark=d.status==='complete'?'✓':d.status==='rusak'?'!':d.status==='partial'?'~':'';
-    calCells+=`<div class="cal-day ${isTdy?'today':d.status}">${d.day}${mark?`<div class="day-mark">${mark}</div>`:''}</div>`;
-  });
-
-  const cached=S.rekapCache[key]||{};
-  let tblHead=`<tr><th class="item-th">Item</th>`;
-  for(let i=1;i<=days;i++) tblHead+=`<th>${i}</th>`;
-  tblHead+=`</tr>`;
-  let tblBody='';
-  room?.items.forEach(item=>{
-    tblBody+=`<tr><td class="item-td">${item.name}</td>`;
-    for(let i=1;i<=days;i++){
-      const dk=`${S.selectedMonth}-${pad(i)}`;
-      const a=cached[dk]?.items?.[item.id]?.a;
-      const sym=a==='ok'?`<span style="color:#10b981">✓</span>`:a==='rusak'?`<span style="color:#ef4444">✗</span>`:a==='perbaikan'?`<span style="color:#f59e0b">⚠</span>`:'';
-      tblBody+=`<td>${sym}</td>`;
-    }
-    tblBody+=`</tr>`;
-  });
-
-  container.innerHTML=`
-  <div class="page-title">📊 Rekap Bulanan</div>
+  const container=c||document.getElementById('mainContent'), room=ROOMS.find(r=>r.id===S.rekapRoomId), key=`${S.rekapRoomId}_${S.selectedMonth}`, isLoaded=!!S.rekapCache[key], monthData=getMonthlyData(S.rekapRoomId,S.selectedMonth);
+  const complete=monthData.filter(d=>d.status==='complete').length, partial=monthData.filter(d=>d.status==='partial').length, rusakCount=monthData.filter(d=>d.status==='rusak').length, days=getDaysInMonth(S.selectedMonth);
+  const [year,month]=S.selectedMonth.split('-').map(Number), firstDow=new Date(year,month-1,1).getDay(), today=getToday();
+  let calCells=''; for(let i=0;i<firstDow;i++) calCells+=`<div></div>`;
+  monthData.forEach(d=>{ const isTdy=d.dateKey===today, mark=d.status==='complete'?'✓':d.status==='rusak'?'!':d.status==='partial'?'~':''; calCells+=`<div class="cal-day ${isTdy?'today':d.status}">${d.day}${mark?`<div class="day-mark">${mark}</div>`:''}</div>`; });
+  const cached=S.rekapCache[key]||{}; let tblHead=`<tr><th class="item-th">Item</th>`; for(let i=1;i<=days;i++) tblHead+=`<th>${i}</th>`; tblHead+=`</tr>`;
+  let tblBody=''; room?.items.forEach(item=>{ tblBody+=`<tr><td class="item-td">${item.name}</td>`; for(let i=1;i<=days;i++){ const dk=`${S.selectedMonth}-${pad(i)}`, a=cached[dk]?.items?.[item.id]?.a, sym=a==='ok'?`<span style="color:#10b981">✓</span>`:a==='rusak'?`<span style="color:#ef4444">✗</span>`:a==='perbaikan'?`<span style="color:#f59e0b">⚠</span>`:''; tblBody+=`<td>${sym}</td>`; } tblBody+=`</tr>`; });
+  container.innerHTML=`<div class="page-title">📊 Rekap Bulanan</div>
   <input type="month" class="month-sel" value="${S.selectedMonth}" onchange="changeMonth(this.value)">
-  <select class="room-sel" onchange="changeRekapRoom(this.value)">
-    ${ROOMS.map(r=>`<option value="${r.id}"${r.id===S.rekapRoomId?' selected':''}>${r.emoji} ${r.name}</option>`).join('')}
-  </select>
+  <select class="room-sel" onchange="changeRekapRoom(this.value)">${ROOMS.map(r=>`<option value="${r.id}"${r.id===S.rekapRoomId?' selected':''}>${r.emoji} ${r.name}</option>`).join('')}</select>
   ${!isLoaded?`<div style="text-align:center;padding:40px 0;color:#94a3b8;font-size:13px">⏳ Memuat data rekap...</div>`:`
-  <div class="rekap-stats">
-    <div class="rek-stat" style="background:#d1fae5"><div class="rek-stat-num" style="color:#059669">${complete}</div><div class="rek-stat-lbl" style="color:#059669">Lengkap</div></div>
-    <div class="rek-stat" style="background:#fef3c7"><div class="rek-stat-num" style="color:#d97706">${partial}</div><div class="rek-stat-lbl" style="color:#d97706">Sebagian</div></div>
-    <div class="rek-stat" style="background:#fee2e2"><div class="rek-stat-num" style="color:#dc2626">${rusakCount}</div><div class="rek-stat-lbl" style="color:#dc2626">Ada Masalah</div></div>
-  </div>
-  <div class="cal-card">
-    <div class="cal-title">${room?.emoji} ${room?.name} — ${formatMonthYear(S.selectedMonth)}</div>
-    <div class="cal-grid">
-      ${['Min','Sen','Sel','Rab','Kam','Jum','Sab'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}
-      ${calCells}
-    </div>
-    <div class="cal-legend">
-      <div class="leg-item"><div class="leg-dot" style="background:#d1fae5"></div><span style="color:#059669">✓ Lengkap</span></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#fef3c7"></div><span style="color:#d97706">~ Sebagian</span></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#fee2e2"></div><span style="color:#dc2626">! Ada Masalah</span></div>
-      <div class="leg-item"><div class="leg-dot" style="background:#f1f5f9"></div><span style="color:#94a3b8">○ Belum</span></div>
-    </div>
-  </div>
-  <div class="cal-card">
-    <div class="cal-title">Detail Item per Hari</div>
-    <div class="tbl-wrap">
-      <table class="detail-tbl"><thead>${tblHead}</thead><tbody>${tblBody}</tbody></table>
-    </div>
-  </div>`}`;
+  <div class="rekap-stats"><div class="rek-stat" style="background:#d1fae5"><div class="rek-stat-num" style="color:#059669">${complete}</div><div class="rek-stat-lbl" style="color:#059669">Lengkap</div></div><div class="rek-stat" style="background:#fef3c7"><div class="rek-stat-num" style="color:#d97706">${partial}</div><div class="rek-stat-lbl" style="color:#d97706">Sebagian</div></div><div class="rek-stat" style="background:#fee2e2"><div class="rek-stat-num" style="color:#dc2626">${rusakCount}</div><div class="rek-stat-lbl" style="color:#dc2626">Ada Masalah</div></div></div>
+  <div class="cal-card"><div class="cal-title">${room?.emoji} ${room?.name} — ${formatMonthYear(S.selectedMonth)}</div><div class="cal-grid">${['Min','Sen','Sel','Rab','Kam','Jum','Sab'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}${calCells}</div><div class="cal-legend"><div class="leg-item"><div class="leg-dot" style="background:#d1fae5"></div><span style="color:#059669">✓ Lengkap</span></div><div class="leg-item"><div class="leg-dot" style="background:#fef3c7"></div><span style="color:#d97706">~ Sebagian</span></div><div class="leg-item"><div class="leg-dot" style="background:#fee2e2"></div><span style="color:#dc2626">! Ada Masalah</span></div><div class="leg-item"><div class="leg-dot" style="background:#f1f5f9"></div><span style="color:#94a3b8">○ Belum</span></div></div></div>
+  <div class="cal-card"><div class="cal-title">Detail Item per Hari</div><div class="tbl-wrap"><table class="detail-tbl"><thead>${tblHead}</thead><tbody>${tblBody}</tbody></table></div></div>`}`;
 }
 
 // ---- QR ----
 function renderQR(c) {
   const baseUrl='https://puskesmas-loaduri.vercel.app';
-  let html=`<div class="page-title">📱 QR Code Ruangan</div>
-  <div class="qr-info">⚠ Setelah deploy ke Vercel, ganti <b>baseUrl</b> di kode dengan URL asli domain kamu.</div>`;
-  ROOMS.forEach(room=>{
-    const url=`${baseUrl}?room=${room.id}`;
-    const qrSrc=`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`;
-    html+=`<div class="qr-card">
-      <img class="qr-img" src="${qrSrc}" width="76" height="76" id="qr-${room.id}">
-      <div style="flex:1">
-        <div class="qr-room-name">${room.emoji} ${room.name}</div>
-        <div class="qr-room-meta">${room.kode} · ${room.lokasi}</div>
-        <div class="qr-url">${url}</div>
-        <button class="qr-dl-btn" id="dl-${room.id}" onclick="downloadQR('${room.id}','${room.name}')">
-          ⬇ Unduh QR
-        </button>
-      </div>
-    </div>`;
-  });
-  html+=`<div class="deploy-card">
-    <div class="deploy-title">🚀 Cara Deploy & Pasang QR</div>
-    <ol class="deploy-steps">
-      <li>Upload file HTML ini ke <b>GitHub</b></li>
-      <li>Hubungkan repo ke <b>Vercel</b> → auto-deploy</li>
-      <li>Salin URL Vercel, ganti <code>baseUrl</code> di kode, commit ulang</li>
-      <li>Screenshot QR tiap ruangan → print ukuran <b>A5</b></li>
-      <li>Laminating &amp; tempel di dinding tiap ruangan</li>
-    </ol>
-  </div>`;
+  let html=`<div class="page-title">📱 QR Code Ruangan</div><div class="qr-info">⚠ Pastikan <b>baseUrl</b> di kode sudah sesuai URL Vercel kamu.</div>`;
+  ROOMS.forEach(room=>{ const url=`${baseUrl}?room=${room.id}`, qrSrc=`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`; html+=`<div class="qr-card"><img class="qr-img" src="${qrSrc}" width="76" height="76" id="qr-${room.id}"><div style="flex:1"><div class="qr-room-name">${room.emoji} ${room.name}</div><div class="qr-room-meta">${room.kode} · ${room.lokasi}</div><div class="qr-url">${url}</div><button class="qr-dl-btn" id="dl-${room.id}" onclick="downloadQR('${room.id}','${room.name}')">⬇ Unduh QR</button></div></div>`; });
+  html+=`<div class="deploy-card"><div class="deploy-title">🚀 Cara Deploy & Pasang QR</div><ol class="deploy-steps"><li>Upload file HTML ini ke <b>GitHub</b></li><li>Hubungkan repo ke <b>Vercel</b> → auto-deploy</li><li>Salin URL Vercel, ganti <code>baseUrl</code> di kode, commit ulang</li><li>Screenshot QR tiap ruangan → print ukuran <b>A5</b></li><li>Laminating &amp; tempel di dinding tiap ruangan</li></ol></div>`;
   c.innerHTML=html;
 }
 
-// ==================== EXPORT ====================
-function renderExport(c) {
-  c.innerHTML=`
-  <div class="page-title">📤 Export Data</div>
-  <input type="month" class="export-month-sel" id="exportMonthSel"
-    value="${S.selectedMonth}" onchange="S.exportMonth=this.value">
-
-  <div class="export-card">
-    <div class="export-card-title">📊 Export Excel (.xlsx)</div>
-    <div class="export-card-sub">
-      Berisi 3 sheet: Ringkasan semua ruangan, Log masalah (Rusak & Perbaikan), dan detail tiap ruangan.
-    </div>
-    <button class="export-btn export-btn-excel" id="btnExcel" onclick="exportExcel()">
-      📥 Unduh Excel
-    </button>
-    <div class="export-info">
-      ✓ Sheet Ringkasan — jumlah hari lengkap/sebagian/masalah per ruangan<br>
-      ✓ Sheet Log Masalah — daftar item rusak & perbaikan lengkap dengan tanggal + verifikator<br>
-      ✓ Sheet per Ruangan — kondisi tiap item setiap hari
-    </div>
-  </div>
-
-  <div class="export-card">
-    <div class="export-card-title">📄 Export PDF</div>
-    <div class="export-card-sub">
-      Ringkasan + Log Masalah dalam format PDF siap cetak atau kirim via WhatsApp/email.
-    </div>
-    <button class="export-btn export-btn-pdf" id="btnPdf" onclick="exportPDF()">
-      📥 Unduh PDF
-    </button>
-    <div class="export-info">
-      ✓ Halaman Ringkasan — tabel semua ruangan<br>
-      ✓ Halaman Log Masalah — tabel item bermasalah lengkap
-    </div>
-  </div>`;
-  S.exportMonth = S.selectedMonth;
-}
-
-async function fetchAllRoomsMonth(ym) {
-  showLoading();
-  const allData = {};
-  try {
-    await Promise.all(ROOMS.map(async r => {
-      allData[r.id] = await fbLoadMonth(r.id, ym);
-    }));
-  } catch(e) {
-    showToast('⚠ Gagal memuat data. Cek koneksi.','error');
-  }
-  hideLoading();
-  return allData;
-}
-
-function buildSummaryRows(allData, ym) {
-  return ROOMS.map(room => {
-    const days = getDaysInMonth(ym);
-    let lengkap=0, sebagian=0, masalah=0, belum=0;
-    for(let i=1;i<=days;i++){
-      const dk=`${ym}-${pad(i)}`;
-      const dd=allData[room.id]?.[dk];
-      if(!dd){ belum++; continue; }
-      const total=room.items.length;
-      const ok=room.items.filter(it=>dd.items?.[it.id]?.a==='ok').length;
-      const rusak=room.items.filter(it=>dd.items?.[it.id]?.a==='rusak').length;
-      if(rusak>0) masalah++;
-      else if(ok===total) lengkap++;
-      else if(ok>0) sebagian++;
-      else belum++;
-    }
-    return [room.emoji+' '+room.name, room.kode, room.lokasi, lengkap, sebagian, masalah, belum];
-  });
-}
-
-function buildLogRows(allData, ym) {
-  const rows = [];
-  const days = getDaysInMonth(ym);
-  ROOMS.forEach(room => {
-    for(let i=1;i<=days;i++){
-      const dk=`${ym}-${pad(i)}`;
-      const dd=allData[room.id]?.[dk];
-      if(!dd) continue;
-      room.items.forEach(item => {
-        const a=dd.items?.[item.id]?.a;
-        if(a==='rusak'||a==='perbaikan'){
-          rows.push([
-            dk,
-            room.emoji+' '+room.name,
-            item.name,
-            a==='rusak'?'Rusak':'Dalam Perbaikan',
-            dd.verifikator||'-',
-            dd.isBackdated?'Ya':'Tidak',
-          ]);
-        }
-      });
-    }
-  });
-  return rows;
-}
-
-async function exportExcel() {
-  const ym = S.exportMonth || S.selectedMonth;
-  const btn = document.getElementById('btnExcel');
-  btn.disabled=true; btn.textContent='⏳ Menyiapkan...';
-
-  const allData = await fetchAllRoomsMonth(ym);
-  const wb = XLSX.utils.book_new();
-  const monthLabel = formatMonthYear(ym);
-
-  // ── Sheet 1: Ringkasan ──
-  const sumHeader = [['REKAP PEMELIHARAAN LINGKUNGAN KERJA — '+monthLabel.toUpperCase()]];
-  const sumCols   = [['Ruangan','Kode','Lokasi','✓ Lengkap','~ Sebagian','! Masalah','○ Belum']];
-  const sumRows   = buildSummaryRows(allData, ym);
-  const wsSum = XLSX.utils.aoa_to_sheet([...sumHeader, [], ...sumCols, ...sumRows]);
-  wsSum['!cols'] = [{wch:28},{wch:8},{wch:8},{wch:10},{wch:10},{wch:10},{wch:10}];
-  XLSX.utils.book_append_sheet(wb, wsSum, 'Ringkasan');
-
-  // ── Sheet 2: Log Masalah ──
-  const logHeader = [['LOG MASALAH — '+monthLabel.toUpperCase()]];
-  const logCols   = [['Tanggal','Ruangan','Item','Status','Verifikator','Backdate?']];
-  const logRows   = buildLogRows(allData, ym);
-  const wsLog = XLSX.utils.aoa_to_sheet([
-    ...logHeader, [],
-    ...logCols,
-    ...(logRows.length > 0 ? logRows : [['(Tidak ada masalah tercatat di bulan ini)']]),
-  ]);
-  wsLog['!cols'] = [{wch:12},{wch:28},{wch:22},{wch:18},{wch:20},{wch:10}];
-  XLSX.utils.book_append_sheet(wb, wsLog, 'Log Masalah');
-
-  // ── Sheet per Ruangan ──
-  const days = getDaysInMonth(ym);
-  const dayNums = Array.from({length:days},(_,i)=>i+1);
-
-  ROOMS.forEach(room => {
-    const header1 = [room.name.toUpperCase()+' ('+room.kode+') — '+monthLabel.toUpperCase()];
-    const header2 = ['Item / Hari ke-', ...dayNums];
-    const itemRows = room.items.map(item => {
-      const cols = [item.name];
-      for(let i=1;i<=days;i++){
-        const dk=`${ym}-${pad(i)}`;
-        const a=allData[room.id]?.[dk]?.items?.[item.id]?.a;
-        cols.push(a==='ok'?'✓':a==='rusak'?'R':a==='perbaikan'?'P':'');
-      }
-      return cols;
-    });
-    const veriRow = ['Verifikator', ...dayNums.map(i=>{
-      const dk=`${ym}-${pad(i)}`;
-      return allData[room.id]?.[dk]?.verifikator||'';
-    })];
-    const keteranganRow = ['','Keterangan: ✓=Sesuai  R=Rusak  P=Dalam Perbaikan'];
-
-    const ws = XLSX.utils.aoa_to_sheet([
-      [header1[0]], [],
-      header2,
-      ...itemRows,
-      [],
-      veriRow,
-      [],
-      keteranganRow,
-    ]);
-    ws['!cols'] = [{wch:22}, ...dayNums.map(()=>({wch:4}))];
-    XLSX.utils.book_append_sheet(wb, ws, room.name.substring(0,31));
-  });
-
-  XLSX.writeFile(wb, `Rekap_PuskesmasLoaDuri_${ym}.xlsx`);
-  btn.disabled=false; btn.innerHTML='📥 Unduh Excel';
-  showToast('✓ File Excel berhasil diunduh!');
-}
-
-async function exportPDF() {
-  const ym = S.exportMonth || S.selectedMonth;
-  const btn = document.getElementById('btnPdf');
-  btn.disabled=true; btn.textContent='⏳ Menyiapkan...';
-
-  const allData = await fetchAllRoomsMonth(ym);
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  const monthLabel = formatMonthYear(ym);
-
-  // ── Halaman 1: Ringkasan ──
-  doc.setFontSize(13); doc.setFont('helvetica','bold');
-  doc.text('REKAP PEMELIHARAAN LINGKUNGAN KERJA', 14, 18);
-  doc.setFontSize(10); doc.setFont('helvetica','normal');
-  doc.text('Puskesmas Loa Duri  |  '+monthLabel, 14, 25);
-  doc.setDrawColor(15,118,110); doc.setLineWidth(0.5);
-  doc.line(14, 28, 196, 28);
-
-  const sumRows = buildSummaryRows(allData, ym);
-  doc.autoTable({
-    startY: 32,
-    head: [['Ruangan','Kode','Lok.','✓ Lengkap','~ Sebagian','! Masalah','○ Belum']],
-    body: sumRows,
-    styles:{ fontSize:9, font:'helvetica' },
-    headStyles:{ fillColor:[15,118,110], textColor:255, fontStyle:'bold' },
-    alternateRowStyles:{ fillColor:[240,253,244] },
-    columnStyles:{
-      0:{cellWidth:55}, 1:{cellWidth:14}, 2:{cellWidth:10},
-      3:{cellWidth:22,halign:'center'}, 4:{cellWidth:22,halign:'center'},
-      5:{cellWidth:22,halign:'center'}, 6:{cellWidth:22,halign:'center'},
-    },
-    margin:{ left:14, right:14 },
-  });
-
-  // ── Halaman 2+: Log Masalah ──
-  doc.addPage();
-  doc.setFontSize(13); doc.setFont('helvetica','bold');
-  doc.text('LOG MASALAH', 14, 18);
-  doc.setFontSize(10); doc.setFont('helvetica','normal');
-  doc.text('Item Rusak & Dalam Perbaikan  |  '+monthLabel, 14, 25);
-  doc.line(14, 28, 196, 28);
-
-  const logRows = buildLogRows(allData, ym);
-  doc.autoTable({
-    startY: 32,
-    head: [['Tanggal','Ruangan','Item','Status','Verifikator','Backdate']],
-    body: logRows.length > 0 ? logRows : [['—','Tidak ada masalah tercatat','','','','']],
-    styles:{ fontSize:8.5, font:'helvetica' },
-    headStyles:{ fillColor:[153,27,27], textColor:255, fontStyle:'bold' },
-    alternateRowStyles:{ fillColor:[254,242,242] },
-    columnStyles:{
-      0:{cellWidth:22}, 1:{cellWidth:45}, 2:{cellWidth:38},
-      3:{cellWidth:28}, 4:{cellWidth:33}, 5:{cellWidth:18,halign:'center'},
-    },
-    margin:{ left:14, right:14 },
-  });
-
-  // Footer tiap halaman
-  const pageCount = doc.internal.getNumberOfPages();
-  for(let i=1;i<=pageCount;i++){
-    doc.setPage(i);
-    doc.setFontSize(8); doc.setFont('helvetica','normal');
-    doc.setTextColor(148,163,184);
-    doc.text(
-      `Puskesmas Loa Duri  |  Dicetak: ${formatDate(getToday())}  |  Hal ${i} / ${pageCount}`,
-      14, 290
-    );
-  }
-
-  doc.save(`Rekap_PuskesmasLoaDuri_${ym}.pdf`);
-  btn.disabled=false; btn.innerHTML='📥 Unduh PDF';
-  showToast('✓ File PDF berhasil diunduh!');
-}  
-  
-// ==================== DOWNLOAD QR ====================
-async function downloadQR(roomId, roomName) {
-  if(!confirm(`Unduh QR Code untuk ${roomName}?`)) return;
-  const btn = document.getElementById(`dl-${roomId}`);
-  if(btn){ btn.disabled=true; btn.textContent='⏳ Mengunduh...'; }
-  try {
-    const baseUrl = 'https://puskesmas-loaduri.vercel.app'; // samakan dengan baseUrl di renderQR
-    const url = `${baseUrl}?room=${roomId}`;
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`;
-    const resp = await fetch(qrSrc);
-    const blob = await resp.blob();
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `QR-${roomName}.png`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    if(btn){ btn.disabled=false; btn.textContent='⬇ Unduh QR'; }
-  } catch(e) {
-    showToast('⚠ Gagal mengunduh QR. Cek koneksi.','error');
-    if(btn){ btn.disabled=false; btn.textContent='⬇ Unduh QR'; }
-  }
-}
-  
 // ==================== INIT ====================
-// Cek apakah dibuka dari QR code (ada parameter ?room=...)
 (async function init() {
-  const params = new URLSearchParams(window.location.search);
-  const roomParam = params.get('room');
-  if (roomParam && ROOMS.find(r => r.id === roomParam)) {
-    // Langsung buka form ruangan yang dituju
-    await openRoom(roomParam);
-  } else {
-    (async function init() {
-      const params = new URLSearchParams(window.location.search);
-      const roomParam = params.get('room');
-      if(roomParam && ROOMS.find(r => r.id === roomParam)) {
-        await openRoom(roomParam);
-      } else {
-        loadDashboard();
-      }
-      // Aktifkan SW kalau izin sudah diberikan sebelumnya
-      if(getNotifStatus() === 'granted') initNotif();
-    })();
-  }
+  const params=new URLSearchParams(window.location.search), roomParam=params.get('room');
+  if(roomParam&&ROOMS.find(r=>r.id===roomParam)) await openRoom(roomParam);
+  else loadDashboard();
+  if(getNotifStatus()==='granted') initNotif();
 })();
 </script>
 </body>
