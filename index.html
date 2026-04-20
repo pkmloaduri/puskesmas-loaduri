@@ -990,10 +990,11 @@ function render() {
 // ---- DASHBOARD ----
 function renderDashboard(c) {
   const today=getToday(), total=ROOMS.length, done=ROOMS.filter(r=>S.dashCache[r.id]?.done).length, loaded=S.dashLoaded;
-  let html=`<div class="hero"><div class="hero-date">${formatDate(today)}</div><div class="hero-greeting">Halo! 👋</div><div class="hero-sub">Puskesmas Loa Duri</div><div class="hero-stats"><div class="hero-stat"><div class="hero-stat-num">${loaded?done:'–'}</div><div class="hero-stat-lbl">Selesai</div></div><div class="hero-stat"><div class="hero-stat-num">${loaded?(total-done):'–'}</div><div class="hero-stat-lbl">Belum Diisi</div></div><div class="hero-stat"><div class="hero-stat-num">${total}</div><div class="hero-stat-lbl">Total Ruangan</div></div></div></div>
+  let html = `
+  <div class="hero">...</div>
   ${buildNotifBanner()}
-  html += `
   <div class="sec-label">Ruangan</div>
+  `;
     
    <div class="filter-row">
       <div class="lantai-tabs">
