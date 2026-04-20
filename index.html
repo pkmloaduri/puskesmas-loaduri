@@ -994,15 +994,7 @@ function renderDashboard(c) {
   ${buildNotifBanner()}
   
   <div class="sec-label">Ruangan</div>`;
-    <div class="filter-row">
-      <div class="lantai-tabs">
-        <button class="lantai-tab${S.rekapLantaiFilter==='semua'?' active':''}" onclick="setLantaiFilter('semua')">Semua</button>
-        <button class="lantai-tab${S.rekapLantaiFilter==='Lt 1'?' active':''}" onclick="setLantaiFilter('Lt 1')">Lt 1</button>
-        <button class="lantai-tab${S.rekapLantaiFilter==='Lt 2'?' active':''}" onclick="setLantaiFilter('Lt 2')">Lt 2</button>
-      </div>
-      <input type="search" class="room-search" placeholder="🔍 Cari ruangan..."
-        value="${S.rekapSearch}" oninput="onDashSearch(event)"/>
-    </div>
+    
 
   const roomsFiltered = ROOMS.filter(r => {
           const matchLantai = S.dashLantaiFilter==='semua' || r.lokasi===S.dashLantaiFilter;
@@ -1010,10 +1002,20 @@ function renderDashboard(c) {
           return matchLantai && matchSearch;
   });
         
-  ROOMS.forEach(room=>{
+  roomsFiltered.forEach(room=>{
     const comp=S.dashCache[room.id];
     if(!comp){ html+=`<div class="room-card"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi}</div><div class="skel" style="width:70%;height:4px;margin-top:8px"></div></div><div class="skel" style="width:44px;height:22px;border-radius:20px"></div></div>`; return; }
-    html+=`<div class="room-card${comp.done?' done':''}" onclick="openRoom('${room.id}')"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi} · ${room.items.length} item</div>${comp.filled>0?`<div class="room-progress"><div class="room-progress-fill${comp.done?' done':''}" style="width:${comp.pct}%"></div></div>`:''}${comp.verifikator?`<div class="room-vname">✓ ${comp.verifikator}</div>`:''}</div><div class="room-pct${comp.done?' done':''}">${comp.filled>0?comp.pct+'%':'Belum'}</div></div>`;
+    html+=`
+    <div class="filter-row">
+      <div class="lantai-tabs">
+        <button class="lantai-tab${S.dashLantaiFilter==='semua'?' active':''}" onclick="setLantaiFilter('semua')">Semua</button>
+        <button class="lantai-tab${S.dashLantaiFilter==='Lt 1'?' active':''}" onclick="setLantaiFilter('Lt 1')">Lt 1</button>
+        <button class="lantai-tab${S.dashLantaiFilter==='Lt 2'?' active':''}" onclick="setLantaiFilter('Lt 2')">Lt 2</button>
+      </div>
+      <input type="search" class="room-search" placeholder="🔍 Cari ruangan..."
+        value="${S.dashSearch}" oninput="onDashSearch(event)"/>
+    </div>
+    <div class="room-card${comp.done?' done':''}" onclick="openRoom('${room.id}')"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi} · ${room.items.length} item</div>${comp.filled>0?`<div class="room-progress"><div class="room-progress-fill${comp.done?' done':''}" style="width:${comp.pct}%"></div></div>`:''}${comp.verifikator?`<div class="room-vname">✓ ${comp.verifikator}</div>`:''}</div><div class="room-pct${comp.done?' done':''}">${comp.filled>0?comp.pct+'%':'Belum'}</div></div>`;
   });
 
   function setDashLantai(val){
