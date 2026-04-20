@@ -92,6 +92,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0fdf4;color:#0f172a
 .month-sel,.room-sel{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #e2e8f0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:#fff;outline:none}
 .month-sel{margin-bottom:10px}
 .room-sel{margin-bottom:14px}
+/* ===== FILTER LANTAI + SEARCH ===== */
+.filter-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.lantai-tabs{display:flex;gap:4px;flex-shrink:0}
+.lantai-tab{padding:7px 11px;border-radius:8px;border:1.5px solid #e2e8f0;background:#fff;font-size:11px;font-weight:700;color:#64748b;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;white-space:nowrap}
+.lantai-tab.active{border-color:#0d9488;background:#ccfbf1;color:#0f766e}
+.room-search{flex:1;padding:8px 11px;border-radius:8px;border:1.5px solid #e2e8f0;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:#fff}
+.room-search:focus{border-color:#0d9488}
 .rekap-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .rek-stat{border-radius:10px;padding:10px;text-align:center}
 .rek-stat-num{font-size:22px;font-weight:800}
@@ -623,6 +630,8 @@ let S = {
   selectedMonth: getYearMonth(new Date()),
   rekapRoomId: ROOMS[0].id,
   rekapCache: {},
+  rekapLantaiFilter: 'semua',
+  rekapSearch: '',
   dashCache: {}, dashLoaded: false,
   exportMonth: getYearMonth(new Date()),
 };
@@ -811,6 +820,23 @@ async function loadRekap() {
   hideLoading(); render();
 }
 async function changeRekapRoom(val){ S.rekapRoomId=val; await loadRekap(); }
+ function setLantaiFilter(val) {
+  S.rekapLantaiFilter=val; S.rekapSearch='';
+  // Reset ke ruangan pertama yang sesuai filter
+  const filtered=ROOMS.filter(r=>val==='semua'||r.lokasi===val);
+  if(filtered.length>0) S.rekapRoomId=filtered[0].id;
+  loadRekap();
+}
+
+function setRekapSearch(val) {
+  S.rekapSearch=val;
+  const filtered=ROOMS.filter(r=>{
+    const matchLantai=S.rekapLantaiFilter==='semua'||r.lokasi===S.rekapLantaiFilter;
+    return matchLantai&&(r.name.toLowerCase().includes(val.toLowerCase())||r.kode.toLowerCase().includes(val.toLowerCase()));
+  });
+  if(filtered.length>0) S.rekapRoomId=filtered[0].id;
+  loadRekap();
+} 
 async function changeMonth(val){ S.selectedMonth=val; await loadRekap(); }
 
 function getMonthlyData(roomId, ym) {
@@ -1006,18 +1032,65 @@ function buildExcSection() {
 
 // ---- REKAP ----
 function renderRekap(c) {
-  const container=c||document.getElementById('mainContent'), room=ROOMS.find(r=>r.id===S.rekapRoomId), key=`${S.rekapRoomId}_${S.selectedMonth}`, isLoaded=!!S.rekapCache[key], monthData=getMonthlyData(S.rekapRoomId,S.selectedMonth);
-  const complete=monthData.filter(d=>d.status==='complete').length, partial=monthData.filter(d=>d.status==='partial').length, rusakCount=monthData.filter(d=>d.status==='rusak').length, days=getDaysInMonth(S.selectedMonth);
-  const [year,month]=S.selectedMonth.split('-').map(Number), firstDow=new Date(year,month-1,1).getDay(), today=getToday();
-  let calCells=''; for(let i=0;i<firstDow;i++) calCells+=`<div></div>`;
+  const container=c||document.getElementById('mainContent');
+  const room=ROOMS.find(r=>r.id===S.rekapRoomId);
+  const key=`${S.rekapRoomId}_${S.selectedMonth}`;
+  const isLoaded=!!S.rekapCache[key];
+  const monthData=getMonthlyData(S.rekapRoomId,S.selectedMonth);
+  const complete=monthData.filter(d=>d.status==='complete').length;
+  const partial=monthData.filter(d=>d.status==='partial').length;
+  const rusakCount=monthData.filter(d=>d.status==='rusak').length;
+  const days=getDaysInMonth(S.selectedMonth);
+  const [year,month]=S.selectedMonth.split('-').map(Number);
+  const firstDow=new Date(year,month-1,1).getDay();
+  const today=getToday();
+
+  // Filter ruangan berdasarkan lantai + search
+  const filteredRooms=ROOMS.filter(r=>{
+    const matchLantai=S.rekapLantaiFilter==='semua'||r.lokasi===S.rekapLantaiFilter;
+    const matchSearch=r.name.toLowerCase().includes(S.rekapSearch.toLowerCase())||r.kode.toLowerCase().includes(S.rekapSearch.toLowerCase());
+    return matchLantai&&matchSearch;
+  });
+
+  // Pastikan rekapRoomId valid dalam filter saat ini
+  if(!filteredRooms.find(r=>r.id===S.rekapRoomId)&&filteredRooms.length>0){
+    S.rekapRoomId=filteredRooms[0].id;
+  }
+
+  let calCells='';
+  for(let i=0;i<firstDow;i++) calCells+=`<div></div>`;
   monthData.forEach(d=>{ const isTdy=d.dateKey===today, mark=d.status==='complete'?'✓':d.status==='rusak'?'!':d.status==='partial'?'~':''; calCells+=`<div class="cal-day ${isTdy?'today':d.status}">${d.day}${mark?`<div class="day-mark">${mark}</div>`:''}</div>`; });
-  const cached=S.rekapCache[key]||{}; let tblHead=`<tr><th class="item-th">Item</th>`; for(let i=1;i<=days;i++) tblHead+=`<th>${i}</th>`; tblHead+=`</tr>`;
+
+  const cached=S.rekapCache[key]||{};
+  let tblHead=`<tr><th class="item-th">Item</th>`; for(let i=1;i<=days;i++) tblHead+=`<th>${i}</th>`; tblHead+=`</tr>`;
   let tblBody=''; room?.items.forEach(item=>{ tblBody+=`<tr><td class="item-td">${item.name}</td>`; for(let i=1;i<=days;i++){ const dk=`${S.selectedMonth}-${pad(i)}`, a=cached[dk]?.items?.[item.id]?.a, sym=a==='ok'?`<span style="color:#10b981">✓</span>`:a==='rusak'?`<span style="color:#ef4444">✗</span>`:a==='perbaikan'?`<span style="color:#f59e0b">⚠</span>`:''; tblBody+=`<td>${sym}</td>`; } tblBody+=`</tr>`; });
-  container.innerHTML=`<div class="page-title">📊 Rekap Bulanan</div>
+
+  container.innerHTML=`
+  <div class="page-title">📊 Rekap Bulanan</div>
   <input type="month" class="month-sel" value="${S.selectedMonth}" onchange="changeMonth(this.value)">
-  <select class="room-sel" onchange="changeRekapRoom(this.value)">${ROOMS.map(r=>`<option value="${r.id}"${r.id===S.rekapRoomId?' selected':''}>${r.emoji} ${r.name}</option>`).join('')}</select>
+
+  <div class="filter-row">
+    <div class="lantai-tabs">
+      <button class="lantai-tab${S.rekapLantaiFilter==='semua'?' active':''}" onclick="setLantaiFilter('semua')">Semua</button>
+      <button class="lantai-tab${S.rekapLantaiFilter==='Lt 1'?' active':''}" onclick="setLantaiFilter('Lt 1')">Lt 1</button>
+      <button class="lantai-tab${S.rekapLantaiFilter==='Lt 2'?' active':''}" onclick="setLantaiFilter('Lt 2')">Lt 2</button>
+    </div>
+    <input type="search" class="room-search" placeholder="🔍 Cari ruangan..."
+      value="${S.rekapSearch}" oninput="setRekapSearch(this.value)">
+  </div>
+
+  <select class="room-sel" onchange="changeRekapRoom(this.value)">
+    ${filteredRooms.length>0
+      ? filteredRooms.map(r=>`<option value="${r.id}"${r.id===S.rekapRoomId?' selected':''}>${r.emoji} ${r.name}</option>`).join('')
+      : `<option disabled>Tidak ada ruangan ditemukan</option>`}
+  </select>
+
   ${!isLoaded?`<div style="text-align:center;padding:40px 0;color:#94a3b8;font-size:13px">⏳ Memuat data rekap...</div>`:`
-  <div class="rekap-stats"><div class="rek-stat" style="background:#d1fae5"><div class="rek-stat-num" style="color:#059669">${complete}</div><div class="rek-stat-lbl" style="color:#059669">Lengkap</div></div><div class="rek-stat" style="background:#fef3c7"><div class="rek-stat-num" style="color:#d97706">${partial}</div><div class="rek-stat-lbl" style="color:#d97706">Sebagian</div></div><div class="rek-stat" style="background:#fee2e2"><div class="rek-stat-num" style="color:#dc2626">${rusakCount}</div><div class="rek-stat-lbl" style="color:#dc2626">Ada Masalah</div></div></div>
+  <div class="rekap-stats">
+    <div class="rek-stat" style="background:#d1fae5"><div class="rek-stat-num" style="color:#059669">${complete}</div><div class="rek-stat-lbl" style="color:#059669">Lengkap</div></div>
+    <div class="rek-stat" style="background:#fef3c7"><div class="rek-stat-num" style="color:#d97706">${partial}</div><div class="rek-stat-lbl" style="color:#d97706">Sebagian</div></div>
+    <div class="rek-stat" style="background:#fee2e2"><div class="rek-stat-num" style="color:#dc2626">${rusakCount}</div><div class="rek-stat-lbl" style="color:#dc2626">Ada Masalah</div></div>
+  </div>
   <div class="cal-card"><div class="cal-title">${room?.emoji} ${room?.name} — ${formatMonthYear(S.selectedMonth)}</div><div class="cal-grid">${['Min','Sen','Sel','Rab','Kam','Jum','Sab'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}${calCells}</div><div class="cal-legend"><div class="leg-item"><div class="leg-dot" style="background:#d1fae5"></div><span style="color:#059669">✓ Lengkap</span></div><div class="leg-item"><div class="leg-dot" style="background:#fef3c7"></div><span style="color:#d97706">~ Sebagian</span></div><div class="leg-item"><div class="leg-dot" style="background:#fee2e2"></div><span style="color:#dc2626">! Ada Masalah</span></div><div class="leg-item"><div class="leg-dot" style="background:#f1f5f9"></div><span style="color:#94a3b8">○ Belum</span></div></div></div>
   <div class="cal-card"><div class="cal-title">Detail Item per Hari</div><div class="tbl-wrap"><table class="detail-tbl"><thead>${tblHead}</thead><tbody>${tblBody}</tbody></table></div></div>`}`;
 }
