@@ -634,8 +634,6 @@ let S = {
   rekapSearch: '',
   dashCache: {}, dashLoaded: false,
   exportMonth: getYearMonth(new Date()),
-  dashSearch: '',
-  dashLantaiFilter: 'semua',
 };
 
 // ==================== LOADING ====================
@@ -990,30 +988,10 @@ function render() {
 // ---- DASHBOARD ----
 function renderDashboard(c) {
   const today=getToday(), total=ROOMS.length, done=ROOMS.filter(r=>S.dashCache[r.id]?.done).length, loaded=S.dashLoaded;
-  let html = `
   let html=`<div class="hero"><div class="hero-date">${formatDate(today)}</div><div class="hero-greeting">Halo! 👋</div><div class="hero-sub">Puskesmas Loa Duri</div><div class="hero-stats"><div class="hero-stat"><div class="hero-stat-num">${loaded?done:'–'}</div><div class="hero-stat-lbl">Selesai</div></div><div class="hero-stat"><div class="hero-stat-num">${loaded?(total-done):'–'}</div><div class="hero-stat-lbl">Belum Diisi</div></div><div class="hero-stat"><div class="hero-stat-num">${total}</div><div class="hero-stat-lbl">Total Ruangan</div></div></div></div>
   ${buildNotifBanner()}
-  <div class="sec-label">Ruangan</div>
-  `;
-    
-   <div class="filter-row">
-      <div class="lantai-tabs">
-        <button class="lantai-tab${S.dashLantaiFilter==='semua'?' active':''}" onclick="setDashLantai('semua')">Semua</button>
-        <button class="lantai-tab${S.dashLantaiFilter==='Lt 1'?' active':''}" onclick="setDashLantai('Lt 1')">Lt 1</button>
-        <button class="lantai-tab${S.dashLantaiFilter==='Lt 2'?' active':''}" onclick="setDashLantai('Lt 2')">Lt 2</button>
-      </div>
-      <input type="search" class="room-search" placeholder="🔍 Cari ruangan..."
-        value="${S.dashSearch}" oninput="onDashSearch(event)"/>
-    </div>
-    `;
-
-  const roomsFiltered = ROOMS.filter(r => {
-          const matchLantai = S.dashLantaiFilter==='semua' || r.lokasi===S.dashLantaiFilter;
-          const matchSearch = r.name.toLowerCase().includes(S.dashSearch.toLowerCase());
-          return matchLantai && matchSearch;
-  });
-        
-  roomsFiltered.forEach(room=>{
+  <div class="sec-label">Ruangan</div>`;
+  ROOMS.forEach(room=>{
     const comp=S.dashCache[room.id];
     if(!comp){ html+=`<div class="room-card"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi}</div><div class="skel" style="width:70%;height:4px;margin-top:8px"></div></div><div class="skel" style="width:44px;height:22px;border-radius:20px"></div></div>`; return; }
     html+=`<div class="room-card${comp.done?' done':''}" onclick="openRoom('${room.id}')"><div class="room-emoji">${room.emoji}</div><div class="room-info"><div class="room-name">${room.name}</div><div class="room-meta">${room.kode} · ${room.lokasi} · ${room.items.length} item</div>${comp.filled>0?`<div class="room-progress"><div class="room-progress-fill${comp.done?' done':''}" style="width:${comp.pct}%"></div></div>`:''}${comp.verifikator?`<div class="room-vname">✓ ${comp.verifikator}</div>`:''}</div><div class="room-pct${comp.done?' done':''}">${comp.filled>0?comp.pct+'%':'Belum'}</div></div>`;
@@ -1021,27 +999,6 @@ function renderDashboard(c) {
   c.innerHTML=html;
 }
 
-function setDashLantai(val){
-  S.dashLantaiFilter = val;
-  render();
-}
-
-function onDashSearch(e){
-  const val = e.target.value;
-  const cursor = e.target.selectionStart;
-
-  S.dashSearch = val;
-  render();
-
-  setTimeout(()=>{
-    const inp = document.querySelector('.room-search');
-    if(inp){
-      inp.focus();
-      inp.setSelectionRange(cursor, cursor);
-    }
-  },0);
-}
-  
 // ---- FORM ----
 function renderForm(c) {
   const today=getToday(), ym=today.substring(0,7), {min,max}=getMonthBounds(ym);
