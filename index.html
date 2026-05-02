@@ -648,6 +648,7 @@ let S = {
   dashLantaiFilter: 'semua',
   dashSearch: '',
   exportMonth: getYearMonth(new Date()),
+  qrSearch: '',
 };
 
 // ==================== LOADING ====================
@@ -1170,10 +1171,53 @@ function renderRekap(c) {
 // ---- QR ----
 function renderQR(c) {
   const baseUrl='https://puskesmas-loaduri.vercel.app';
-  let html=`<div class="page-title">📱 QR Code Ruangan</div><div class="qr-info"></div>`;
-  ROOMS.forEach(room=>{ const url=`${baseUrl}?room=${room.id}`, qrSrc=`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`; html+=`<div class="qr-card"><img class="qr-img" src="${qrSrc}" width="76" height="76" id="qr-${room.id}"><div style="flex:1"><div class="qr-room-name">${room.emoji} ${room.name}</div><div class="qr-room-meta">${room.kode} · ${room.lokasi}</div><div class="qr-url">${url}</div><button class="qr-dl-btn" id="dl-${room.id}" onclick="downloadQR('${room.id}','${room.name}')">⬇ Unduh QR</button></div></div>`; });
-  html+=`<div class="deploy-card"><div class="deploy-title">🚀 Cara Deploy & Pasang QR</div><ol class="deploy-steps"><li>Upload file HTML ini ke <b>GitHub</b></li><li>Hubungkan repo ke <b>Vercel</b> → auto-deploy</li><li>Salin URL Vercel, ganti <code>baseUrl</code> di kode, commit ulang</li><li>Screenshot QR tiap ruangan → print ukuran <b>A5</b></li><li>Laminating &amp; tempel di dinding tiap ruangan</li></ol></div>`;
+  const filtered=ROOMS.filter(r=>
+    r.name.toLowerCase().includes((S.qrSearch||'').toLowerCase())||
+    r.kode.toLowerCase().includes((S.qrSearch||'').toLowerCase())
+  );
+  let html=`<div class="page-title">📱 QR Code Ruangan</div>
+  <input type="search" class="room-search" style="width:100%;margin-bottom:14px"
+    placeholder="🔍 Cari ruangan..."
+    value="${S.qrSearch||''}"
+    oninput="S.qrSearch=this.value;renderQRList()"
+    id="qrSearchInput">
+  <div id="qrList"></div>`;
   c.innerHTML=html;
+  renderQRList();
+}
+
+function renderQRList() {
+  const baseUrl='https://puskesmas-loaduri.vercel.app';
+  const val=(S.qrSearch||'').toLowerCase();
+  const filtered=ROOMS.filter(r=>
+    r.name.toLowerCase().includes(val)||r.kode.toLowerCase().includes(val)
+  );
+  let html='';
+  if(filtered.length===0){
+    html=`<div style="text-align:center;padding:30px 0;color:#94a3b8;font-size:13px">Ruangan tidak ditemukan</div>`;
+  } else {
+    filtered.forEach(room=>{
+      const url=`${baseUrl}?room=${room.id}`;
+      const qrSrc=`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300&bgcolor=ffffff&margin=8`;
+      html+=`<div class="qr-card">
+        <img class="qr-img" src="${qrSrc}" width="76" height="76" id="qr-${room.id}">
+        <div style="flex:1">
+          <div class="qr-room-name">${room.emoji} ${room.name}</div>
+          <div class="qr-room-meta">${room.kode} · ${room.lokasi}</div>
+          <div class="qr-url">${url}</div>
+          <button class="qr-dl-btn" id="dl-${room.id}" onclick="downloadQR('${room.id}','${room.name}')">⬇ Unduh QR</button>
+        </div>
+      </div>`;
+    });
+  }
+  const el=document.getElementById('qrList');
+  if(el) el.innerHTML=html;
+
+  // Kembalikan focus ke input search
+  requestAnimationFrame(()=>{
+    const inp=document.getElementById('qrSearchInput');
+    if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length); }
+  });
 }
 
 // ==================== INIT ====================
