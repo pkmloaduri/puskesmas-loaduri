@@ -384,7 +384,7 @@ const ROOMS = [
       {id:'tempat-sampah',name:'Tempat Sampah',         standar:'Diganti setiap hari'},
       {id:'ac',           name:'AC',                    standar:'Bersih'},
     ]},
-  { id:'pantry', name:'Pantry', kode:'R-14', lokasi:'Lt 2', emoji:'🍽️',
+  { id:'dapur', name:'Pentry', kode:'R-14', lokasi:'Lt 2', emoji:'🍽️',
     items:[
       {id:'meja-kompor',  name:'Meja Kompor',           standar:'Bersih, rapi'},
       {id:'lantai',       name:'Lantai',                standar:'Bersih, rapi'},
@@ -418,6 +418,16 @@ const ROOMS = [
       {id:'langit',        name:'Langit-langit / Plafon',standar:'Bersih'},
       {id:'dinding',       name:'Dinding',               standar:'Bersih'},
       {id:'wastafel',      name:'Wastafel',              standar:'Bersih, tidak berlumut'},
+      {id:'kaca',          name:'Kaca',                  standar:'Bersih'},
+      {id:'tempat-sampah', name:'Tempat Sampah',         standar:'Diganti setiap hari'},
+    ]},
+  { id:'tb', name:'Ruang Pelayanan TB', kode:'R-19', lokasi:'Lt 1', emoji:'🫁',
+    items:[
+      {id:'meja',          name:'Meja dan kursi',        standar:'Bersih, rapi'},
+      {id:'lantai',        name:'Lantai',                standar:'Bersih, rapi'},
+      {id:'langit',        name:'Langit-langit / Plafon',standar:'Bersih'},
+      {id:'dinding',       name:'Dinding',               standar:'Bersih'},
+      {id:'komputer',      name:'Komputer',              standar:'Bersih'},
       {id:'kaca',          name:'Kaca',                  standar:'Bersih'},
       {id:'tempat-sampah', name:'Tempat Sampah',         standar:'Diganti setiap hari'},
     ]},
@@ -820,19 +830,26 @@ async function loadDashboard() {
 
 // ==================== REKAP ====================
 async function loadRekap() {
-  render(); const key=`${S.rekapRoomId}_${S.selectedMonth}`; if(S.rekapCache[key]) return; showLoading();
-  try{ S.rekapCache[key]=await fbLoadMonth(S.rekapRoomId,S.selectedMonth); }
-  catch(e){ showToast('⚠ Gagal memuat rekap. Cek koneksi.','error'); }
-  hideLoading(); render();
+ const key=`${S.rekapRoomId}_${S.selectedMonth}`;
+  if(S.rekapCache[key]){ render(); return; }
+  render(); // render dulu (tampilkan loading)
+  showLoading();
+  try{
+    S.rekapCache[key]=await fbLoadMonth(S.rekapRoomId, S.selectedMonth);
+  }catch(e){ showToast('⚠ Gagal memuat rekap. Cek koneksi.','error'); }
+  hideLoading();
+  render();
 }
-async function changeRekapRoom(val){ S.rekapRoomId=val; await loadRekap(); }
- function setLantaiFilter(val) {
-  S.rekapLantaiFilter=val; S.rekapSearch='';
-  // Reset ke ruangan pertama yang sesuai filter
-  const filtered=ROOMS.filter(r=>val==='semua'||r.lokasi===val);
-  if(filtered.length>0) S.rekapRoomId=filtered[0].id;
-  loadRekap();
-}
+async function changeRekapRoom(val){ 
+  S.rekapRoomId=val; await loadRekap(); }
+  
+  function setLantaiFilter(val) {
+    S.rekapLantaiFilter=val; S.rekapSearch='';
+    // Reset ke ruangan pertama yang sesuai filter
+    const filtered=ROOMS.filter(r=>val==='semua'||r.lokasi===val);
+    if(filtered.length>0) S.rekapRoomId=filtered[0].id;
+    loadRekap();
+  }
 
 function setRekapSearch(val) {
   S.rekapSearch=val;
@@ -842,7 +859,7 @@ function setRekapSearch(val) {
   });
   if(filtered.length>0) S.rekapRoomId=filtered[0].id;
 
-  // Update HANYA dropdown — jangan re-render seluruh halaman
+  // Hanya update dropdown, TIDAK render apapun
   const sel=document.getElementById('rekapRoomSel');
   if(sel){
     sel.innerHTML=filtered.length>0
@@ -850,11 +867,13 @@ function setRekapSearch(val) {
       : `<option disabled>Tidak ada ruangan ditemukan</option>`;
   }
 
-  // Load data rekap untuk ruangan yang baru dipilih
-  const key=`${S.rekapRoomId}_${S.selectedMonth}`;
-  if(!S.rekapCache[key]) loadRekap();
-  else renderRekap();
+  // Paksa focus kembali ke input
+  requestAnimationFrame(()=>{
+    const inp=document.getElementById('rekapSearchInput');
+    if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length); }
+  });
 }
+  
 
 async function changeMonth(val){ S.selectedMonth=val; await loadRekap(); }
 
@@ -1109,17 +1128,11 @@ function renderRekap(c) {
   const firstDow=new Date(year,month-1,1).getDay();
   const today=getToday();
 
-  // Filter ruangan berdasarkan lantai + search
   const filteredRooms=ROOMS.filter(r=>{
     const matchLantai=S.rekapLantaiFilter==='semua'||r.lokasi===S.rekapLantaiFilter;
-    const matchSearch=r.name.toLowerCase().includes(S.rekapSearch.toLowerCase())||r.kode.toLowerCase().includes(S.rekapSearch.toLowerCase());
-    return matchLantai&&matchSearch;
+    return matchLantai&&(r.name.toLowerCase().includes(S.rekapSearch.toLowerCase())||r.kode.toLowerCase().includes(S.rekapSearch.toLowerCase()));
   });
-
-  // Pastikan rekapRoomId valid dalam filter saat ini
-  if(!filteredRooms.find(r=>r.id===S.rekapRoomId)&&filteredRooms.length>0){
-    S.rekapRoomId=filteredRooms[0].id;
-  }
+  if(!filteredRooms.find(r=>r.id===S.rekapRoomId)&&filteredRooms.length>0) S.rekapRoomId=filteredRooms[0].id;
 
   let calCells='';
   for(let i=0;i<firstDow;i++) calCells+=`<div></div>`;
@@ -1132,7 +1145,6 @@ function renderRekap(c) {
   container.innerHTML=`
   <div class="page-title">📊 Rekap Bulanan</div>
   <input type="month" class="month-sel" value="${S.selectedMonth}" onchange="changeMonth(this.value)">
-
   <div class="filter-row">
     <div class="lantai-tabs">
       <button class="lantai-tab${S.rekapLantaiFilter==='semua'?' active':''}" onclick="setLantaiFilter('semua')">Semua</button>
@@ -1140,22 +1152,17 @@ function renderRekap(c) {
       <button class="lantai-tab${S.rekapLantaiFilter==='Lt 2'?' active':''}" onclick="setLantaiFilter('Lt 2')">Lt 2</button>
     </div>
     <input type="search" class="room-search" placeholder="🔍 Cari ruangan..."
-      value="${S.rekapSearch}" oninput="S.rekapSearch=this.value;setRekapSearch(this.value)" id="rekapSearchInput"
-id="rekapSearchInput">
+      value="${S.rekapSearch}"
+      oninput="S.rekapSearch=this.value;setRekapSearch(this.value)"
+      id="rekapSearchInput">
   </div>
-
   <select class="room-sel" id="rekapRoomSel" onchange="changeRekapRoom(this.value)">
     ${filteredRooms.length>0
       ? filteredRooms.map(r=>`<option value="${r.id}"${r.id===S.rekapRoomId?' selected':''}>${r.emoji} ${r.name}</option>`).join('')
       : `<option disabled>Tidak ada ruangan ditemukan</option>`}
   </select>
-
   ${!isLoaded?`<div style="text-align:center;padding:40px 0;color:#94a3b8;font-size:13px">⏳ Memuat data rekap...</div>`:`
-  <div class="rekap-stats">
-    <div class="rek-stat" style="background:#d1fae5"><div class="rek-stat-num" style="color:#059669">${complete}</div><div class="rek-stat-lbl" style="color:#059669">Lengkap</div></div>
-    <div class="rek-stat" style="background:#fef3c7"><div class="rek-stat-num" style="color:#d97706">${partial}</div><div class="rek-stat-lbl" style="color:#d97706">Sebagian</div></div>
-    <div class="rek-stat" style="background:#fee2e2"><div class="rek-stat-num" style="color:#dc2626">${rusakCount}</div><div class="rek-stat-lbl" style="color:#dc2626">Ada Masalah</div></div>
-  </div>
+  <div class="rekap-stats"><div class="rek-stat" style="background:#d1fae5"><div class="rek-stat-num" style="color:#059669">${complete}</div><div class="rek-stat-lbl" style="color:#059669">Lengkap</div></div><div class="rek-stat" style="background:#fef3c7"><div class="rek-stat-num" style="color:#d97706">${partial}</div><div class="rek-stat-lbl" style="color:#d97706">Sebagian</div></div><div class="rek-stat" style="background:#fee2e2"><div class="rek-stat-num" style="color:#dc2626">${rusakCount}</div><div class="rek-stat-lbl" style="color:#dc2626">Ada Masalah</div></div></div>
   <div class="cal-card"><div class="cal-title">${room?.emoji} ${room?.name} — ${formatMonthYear(S.selectedMonth)}</div><div class="cal-grid">${['Min','Sen','Sel','Rab','Kam','Jum','Sab'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}${calCells}</div><div class="cal-legend"><div class="leg-item"><div class="leg-dot" style="background:#d1fae5"></div><span style="color:#059669">✓ Lengkap</span></div><div class="leg-item"><div class="leg-dot" style="background:#fef3c7"></div><span style="color:#d97706">~ Sebagian</span></div><div class="leg-item"><div class="leg-dot" style="background:#fee2e2"></div><span style="color:#dc2626">! Ada Masalah</span></div><div class="leg-item"><div class="leg-dot" style="background:#f1f5f9"></div><span style="color:#94a3b8">○ Belum</span></div></div></div>
   <div class="cal-card"><div class="cal-title">Detail Item per Hari</div><div class="tbl-wrap"><table class="detail-tbl"><thead>${tblHead}</thead><tbody>${tblBody}</tbody></table></div></div>`}`;
 }
