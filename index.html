@@ -975,7 +975,8 @@ async function exportExcel() {
   ROOMS.forEach(room=>{
     const ws=XLSX.utils.aoa_to_sheet([[room.name.toUpperCase()+' ('+room.kode+') — '+monthLabel.toUpperCase()],[],['Item / Hari ke-',...dayNums],...room.items.map(item=>[item.name,...dayNums.map(i=>{ const a=allData[room.id]?.[`${ym}-${pad(i)}`]?.items?.[item.id]?.a; return a==='ok'?'✓':a==='rusak'?'R':a==='perbaikan'?'P':''; })]),[],['Verifikator',...dayNums.map(i=>allData[room.id]?.[`${ym}-${pad(i)}`]?.verifikator||'')],[],['','Keterangan: ✓=Sesuai  R=Rusak  P=Dalam Perbaikan']]);
     ws['!cols']=[{wch:22},...dayNums.map(()=>({wch:4}))];
-    XLSX.utils.book_append_sheet(wb,ws,room.name.substring(0,31));
+    const sheetName=room.name.replace(/[:\\\/\?\*\[\]]/g,'-').substring(0,31);
+    XLSX.utils.book_append_sheet(wb,ws,sheetName);
   });
   XLSX.writeFile(wb,`Rekap_PuskesmasLoaDuri_${ym}.xlsx`);
   btn.disabled=false; btn.innerHTML='📥 Unduh Excel'; showToast('✓ File Excel berhasil diunduh!');
